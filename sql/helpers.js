@@ -92,7 +92,7 @@ module.exports.verify_artist_exists = (artist_id) => {
     // TODO - SQL STATEMENT HERE, RESOLVE AFTER SUCCESS
     return new Promise((resolve, reject) => {
         sql.query(
-          `SELECT * FROM artworks WHERE id="${artist_id}"`,
+          `SELECT * FROM artworks WHERE ID="${artist_id}" LIMIT 1`,
           function(err, res) {
             if (err) {
               resolve(false);
