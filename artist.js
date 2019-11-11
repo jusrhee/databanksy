@@ -64,6 +64,7 @@ let requestArtsyArtists = (url, token) => {
                 obj.BeginDate = artist.birthday;
                 obj.EndDate = artist.deathday;
                 obj.DataSource = "Artsy";
+                obj.artsy_ID = artist.id;
 
                 try {
                     let ver = await verifyArtist(obj); 
