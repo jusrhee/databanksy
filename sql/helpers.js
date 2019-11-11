@@ -59,8 +59,8 @@ module.exports.add_verified_artist = async (obj) => {
         sql.query(
           `INSERT INTO artists 
           (ID, name, bio, nationality, beginDate, endDate, dataSource, artsy_ID) 
-          VALUES (${id}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, 
-          ${dataSource}, ${artsy_ID})`,
+          VALUES (${id}, "${name}", "${bio}", "${nationality}", "${beginDate}", "${endDate}", 
+          "${dataSource}", "${artsy_ID}"")`,
           function(err, res) {
             if (err) {
               resolve(false);
@@ -124,8 +124,8 @@ module.exports.add_verified_artwork = async (obj) => {
           `INSERT INTO artworks 
           (artwork_ID, creator_ID, title, date, cataloged, classification,
           dataSource, artsy_ID, image) 
-          VALUES (${object_id}, ${creator_id}, ${title}, ${date}, ${cataloged}, ${classification},
-          ${dataSource}, ${artsy_ID}, ${image})`,
+          VALUES (${object_id}, ${creator_id}, "${title}", "${date}", "${cataloged}", "${classification}",
+          "${dataSource}", "${artsy_ID}", "${image}")`,
           function(err, res) {
             if (err) {
               resolve(false);
