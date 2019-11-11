@@ -12,6 +12,7 @@
   "dependencies": {
     "JSONStream": "^1.3.5",
     "google-trends-api": "^4.9.0",
+    "mysql": "^2.17.1",
     "request": "^2.88.0"
   }
 }

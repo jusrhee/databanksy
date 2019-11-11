@@ -2,25 +2,43 @@
 /* DDL statements
 
 CREATE TABLE artists(
-  ID VARCHAR(255) UNIQUE NOT NULL,
+  ID int(20) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
-  bio VARCHAR(500),
+  bio VARCHAR(2000),
   nationality VARCHAR(255),
   beginDate VARCHAR(255),
   endDate VARCHAR(255),
+  dataSource VARCHAR(255),
+  artsy_ID VARCHAR(255),
   PRIMARY KEY(ID)
 );
 
 CREATE TABLE artworks(
-  creator_ID VARCHAR(255) NOT NULL,
-  artwork_ID VARCHAR(255) NOT NULL
+  artwork_ID int(20) UNIQUE NOT NULL,
+  creator_ID int(20) NOT NULL,
   title VARCHAR(255) NOT NULL,
   date VARCHAR(255),
   cataloged VARCHAR(255),
-  classification VARCHAR(255)
+  classification VARCHAR(255),
+  dataSource VARCHAR(255),
+  artsy_ID VARCHAR(255),
+  image VARCHAR(255),
+  PRIMARY KEY(artwork_ID),
+  FOREIGN KEY(creator_ID) REFERENCES artists(ID)
 );
 
 */
+
+const mysql = require('mysql');
+
+let sql = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'djkhaled',
+  database : 'databanksy'
+});
+
+sql.connect();
 
 // NEED TO ADD SERVER LINK/INITIALIZATION TO DEFINE var sql
 module.exports.add_verified_artist = async (obj) => {
@@ -30,10 +48,15 @@ module.exports.add_verified_artist = async (obj) => {
     let nationality = obj.Nationality;
     let beginDate = obj.BeginDate;
     let endDate = obj.EndDate;
+    let dataSource = obj.DataSource; 
+    let artsy_ID = obj.artsy_ID;
 
     return new Promise((resolve, reject) => {
         sql.query(
-          'INSERT INTO artists (ID, name, bio, nationality, beginDate, endDate) VALUES ("' + id + '", "' + name '", "' + bio +'", "' + nationality +'", "' + beginDate +'", "' + endDate + '")',
+          `INSERT INTO artworks 
+          (ID, name, bio, nationality, beginDate, endDate, dataSource, artsy_ID) 
+          VALUES (${id}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, 
+          ${dataSource}, ${artsy_ID})`,
           function(err, res) {
             if (err) {
               resolve(false);
@@ -46,11 +69,26 @@ module.exports.add_verified_artist = async (obj) => {
     })
 }
 
+module.exports.get_artsy_artists = async (obj) => {
+    return new Promise((resolve, reject) => {
+        sql.query(
+          `SELECT creator_ID FROM artists WHERE dataSource="Artsy"`,
+          function(err, res) {
+            if (err) {
+              throw err;
+            } else {
+              resolve(res);
+            }
+          }
+        );
+    })
+}
+
 module.exports.verify_artist_exists = (artist_id) => {
     // TODO - SQL STATEMENT HERE, RESOLVE AFTER SUCCESS
     return new Promise((resolve, reject) => {
         sql.query(
-          'SELECT * FROM artworks WHERE id="' + artist_id + '"',
+          `SELECT * FROM artworks WHERE id="${artist_id}"`,
           function(err, res) {
             if (err) {
               resolve(false);
@@ -73,10 +111,17 @@ module.exports.add_verified_artwork = async (obj) => {
     let date = obj.Date;
     let cataloged = obj.Cataloged;
     let classification = obj.Classification;
+    let dataSource = obj.DataSource; 
+    let artsy_ID = obj.artsy_ID;
+    let image = obj.ThumbnailURL; 
 
     return new Promise((resolve, reject) => {
         sql.query(
-          'INSERT INTO artworks (creator_ID, artwork_ID, title, date, cataloged, classification) VALUES ("' + creator_id + '", "' + object_id '", "' + title +'", "' + date +'", "' + cataloged +'", "' + classification + '")',
+          `INSERT INTO artworks 
+          (artwork_ID, creator_ID, title, date, cataloged, classification,
+          dataSource, artsy_ID, image) 
+          VALUES (${object_id}, ${creator_id}, ${title}, ${date}, ${cataloged}, ${classification},
+          ${dataSource}, ${artsy_ID}, ${image})`,
           function(err, res) {
             if (err) {
               resolve(false);
