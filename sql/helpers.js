@@ -1,9 +1,9 @@
 
 /* Creation and DDL statements
 
-CREATE DATABASE databansky;
+CREATE DATABASE databanksy;
 
-USE databansky;
+USE databanksy;
 
 CREATE TABLE artists(
   ID int(20) UNIQUE NOT NULL,
@@ -57,7 +57,7 @@ module.exports.add_verified_artist = async (obj) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
-          `INSERT INTO artworks 
+          `INSERT INTO artists 
           (ID, name, bio, nationality, beginDate, endDate, dataSource, artsy_ID) 
           VALUES (${id}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, 
           ${dataSource}, ${artsy_ID})`,
