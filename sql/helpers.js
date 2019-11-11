@@ -34,6 +34,7 @@ CREATE TABLE artworks(
 */
 
 const mysql = require('mysql');
+const utf8 = require('utf8');
 
 let sql = mysql.createConnection({
   host     : 'localhost',
@@ -47,9 +48,9 @@ sql.connect();
 // NEED TO ADD SERVER LINK/INITIALIZATION TO DEFINE var sql
 module.exports.add_verified_artist = async (obj) => {
     let id = obj.ConstituentID;
-    let name = obj.DisplayName;
-    let bio = obj.ArtistBio ? `"${obj.ArtistBio}"` : 'NULL';
-    let nationality = obj.Nationality ? `"${obj.Nationality}"` : 'NULL';;
+    let name = `"${utf8.encode(obj.DisplayName)}"`;
+    let bio = obj.ArtistBio ? `"${utf8.encode(obj.ArtistBio)}"` : 'NULL';
+    let nationality = obj.Nationality ? `"${utf8.encode(obj.Nationality)}"` : 'NULL';;
     let beginDate = obj.BeginDate ? `"${obj.BeginDate}"` : 'NULL';
     let endDate = obj.EndDate ? `"${obj.EndDate}"` : 'NULL';
     let dataSource = obj.DataSource ? `"${obj.DataSource}"` : 'NULL';
@@ -111,7 +112,7 @@ module.exports.verify_artist_exists = (artist_id) => {
 module.exports.add_verified_artwork = async (obj) => {
     let creator_id = obj.ConstituentID;
     let object_id = obj.ObjectID;
-    let title = obj.Title;
+    let title = `"${utf8.encode(obj.Title)}"`;
     let date = obj.Date ? `"${obj.Date}"` : 'NULL';
     let cataloged = obj.Cataloged ? `"${obj.Cataloged}"` : 'NULL';
     let classification = obj.Classification ? `"${obj.Classification}"` : 'NULL';
