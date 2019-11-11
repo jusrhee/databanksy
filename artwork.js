@@ -59,13 +59,10 @@ let requestArtsyArtworks = (artist_id, url, token) => {
         // insert res into database 
         if (res._embedded && res._embedded.artworks && res._embedded.artworks.length > 0) {
             for (let artwork of res._embedded.artworks) {
-                let mongo_id = parseInt(artwork.id.substring(0, 4) + artwork.id.substring(9, 12), 16);
-                let artist_mongo_id = parseInt(artist_id.substring(0, 4) + artist_id.substring(9, 12), 16);
-
                 let obj = {}; 
 
-                obj.ConstituentID = [ artist_mongo_id ];
-                obj.object_id = mongo_id;
+                obj.ConstituentID = [ artist_id ];
+                obj.object_id = artwork.id;
                 obj.Title = artwork.title;
                 obj.Date = artwork.date;
                 obj.Cataloged = "Y";

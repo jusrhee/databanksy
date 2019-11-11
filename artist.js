@@ -54,17 +54,15 @@ let requestArtsyArtists = (url, token) => {
 
         if (res._embedded && res._embedded.artists && res._embedded.artists.length > 0) {
             for (let artist of res._embedded.artists) {
-                let mongo_id = parseInt(artist.id.substring(0, 4) + artist.id.substring(9, 12), 16);
                 let obj = {};
 
-                obj.ConstituentID = mongo_id;
+                obj.ConstituentID = artist.id;
                 obj.DisplayName = artist.sortable_name;
                 obj.ArtistBio = artist.biography;
                 obj.Nationality = artist.nationality;
                 obj.BeginDate = artist.birthday;
                 obj.EndDate = artist.deathday;
                 obj.DataSource = "Artsy";
-                obj.artsy_ID = artist.id;
 
                 try {
                     let ver = await verifyArtist(obj); 
