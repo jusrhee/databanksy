@@ -68,8 +68,7 @@ module.exports.add_verified_artist = async (obj) => {
           ${dataSource}, ${artsy_ID})`,
           function(err, res) {
             if (err) {
-              resolve(false);
-              throw err;
+              reject(err);
             } else {
               resolve(true);
             }
@@ -84,7 +83,7 @@ module.exports.get_artsy_artists = async (obj) => {
           `SELECT creator_ID FROM artists WHERE dataSource="Artsy"`,
           function(err, res) {
             if (err) {
-              throw err;
+              reject(err);
             } else {
               resolve(res);
             }
@@ -100,8 +99,7 @@ module.exports.verify_artist_exists = (artist_id) => {
           `SELECT * FROM artists WHERE ID="${artist_id}" LIMIT 1`,
           function(err, res) {
             if (err) {
-              resolve(false);
-              throw err;
+              reject(err);
             };
             if (res.length > 0) {
               resolve(true);
@@ -133,8 +131,7 @@ module.exports.add_verified_artwork = async (obj) => {
           ${dataSource}, ${artsy_ID}, ${image})`,
           function(err, res) {
             if (err) {
-              resolve(false);
-              throw err;
+              reject(err);
             } else {
               resolve(true);
             }
