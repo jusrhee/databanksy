@@ -1,5 +1,9 @@
 
-/* DDL statements
+/* Creation and DDL statements
+
+CREATE DATABASE databansky;
+
+USE databansky;
 
 CREATE TABLE artists(
   ID int(20) UNIQUE NOT NULL,
