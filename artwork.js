@@ -14,7 +14,7 @@ let requestMomaArtworks = () => {
 
     parser.on('data', async function(data) {
         try {
-            let ver = await verifyArtwork(data); 
+            let ver = await verifyArtwork(data);
             data.image = data.ThumbnailURL;
             data.DataSource = "MOMA";
 
@@ -110,11 +110,11 @@ function verifyArtwork(obj) {
     return new Promise(async (resolve, reject) => {
         let verify = true; 
 
-        verify = verify && obj.ConstituentID && obj.ConstituentID.length > 0 && obj.ThumbnailURL;
+        verify = verify && !!obj.ConstituentID && (obj.ConstituentID.length > 0) && !!obj.ThumbnailURL;
 
-        verify = verify && (await helpers.verify_artist_exists(obj.ConstituentID[0]));
+	let exists = await helpers.verify_artist_exists(obj.ConstituentID[0]);
 
-        verify = verify && obj.Title && obj.Date && obj.ObjectID; 
+        verify = verify && exists && !!obj.Title && !!obj.Date && !!obj.ObjectID;
 
         resolve(verify);
     });
@@ -124,7 +124,7 @@ async function iterateArtsyArtists() {
     let artists = await helpers.get_artsy_artists(); 
 
     for (let artist of artists) {
-        console.log('ARTIST IS', artist);
+        console.log('ARTIST IS', artist.ID);
         // TODO - FILL THIS IN
         // requestArtsyArtworks("4d8b92684eb68a1b2c00009e", null, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsInN1YmplY3RfYXBwbGljYXRpb24iOiI1ZGI3NGUzZTQ0ZWRiNjAwMGVlNjEzMjUiLCJleHAiOjE1NzQwMDg0MTMsImlhdCI6MTU3MzQwMzYxMywiYXVkIjoiNWRiNzRlM2U0NGVkYjYwMDBlZTYxMzI1IiwiaXNzIjoiR3Jhdml0eSIsImp0aSI6IjVkYzgzYmRkYmY4M2MxMDAwZGI1ZmU0OSJ9.Tcb-dchhtXC2a36-T8BGvfHA3ABEAG76eXWt0lwKqV0");
     }
