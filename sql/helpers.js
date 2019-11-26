@@ -130,7 +130,7 @@ module.exports.add_verified_artwork = async (obj) => {
             if (err) {
               reject(err);
             } else {
-              resolve(true);
+		resolve(true);
             }
           }
         );
