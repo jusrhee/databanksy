@@ -16,7 +16,7 @@ fs.createReadStream('MoMAExhibitions1929to1989.csv')
 
             add_count++;
         } catch (e) {
-            console.log('an error occurred:', data);
+            console.log('an error occurred:', e, data);
         }
     })
   .on('end', () => {

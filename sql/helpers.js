@@ -160,7 +160,7 @@ module.exports.add_verified_exhibition = async (obj) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
-          `INSERT INTO artworks 
+          `INSERT INTO exhibitions 
           (exhibition_ID, title, beginDate, endDate, role, artist_ID, artist_type) 
           VALUES (${exhibition_ID}, ${title}, ${beginDate}, ${endDate}, ${role}, ${artist_ID},
           ${artist_type})`,
