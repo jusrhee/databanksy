@@ -1,6 +1,8 @@
 
 /* Creation and DDL statements
 
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('djkhaled');
+
 CREATE DATABASE databanksy;
 
 USE databanksy;
@@ -52,7 +54,7 @@ ALTER TABLE databanksy.artworks MODIFY COLUMN title VARCHAR(255)
 const mysql = require('mysql');
 
 let sql = mysql.createConnection({
-  host     : 'localhost',
+  host     : 'http://34.69.32.88/',
   user     : 'root',
   password : 'djkhaled',
   database : 'databanksy'
