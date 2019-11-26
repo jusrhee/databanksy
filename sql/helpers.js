@@ -33,8 +33,8 @@ CREATE TABLE artworks(
 CREATE TABLE exhibitions(
   exhibition_ID INT(10) NOT NULL,
   title VARCHAR(255) NOT NULL,
-  beginDate date,
-  endDate date,
+  beginDate VARCHAR(255) NOT NULL,
+  endDate VARCHAR(255) NOT NULL,
   role VARCHAR(20),
   artist_ID VARCHAR(255) NOT NULL,
   artist_type VARCHAR(20),
@@ -54,7 +54,7 @@ const mysql = require('mysql');
 let sql = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'djkhaled',
+  // password : 'djkhaled',
   database : 'databanksy'
 });
 
