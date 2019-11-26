@@ -1,32 +1,21 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import styled from 'styled-components';
-
-const dummyArtworks = [
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Alice in Wasteland',
-    image: 'https://cdn.shopify.com/s/files/1/0439/8373/products/AliceInWasteland_web_store_file_6da1d3b1-11a0-4e5e-a3be-730ebe205055_1800x.progressive.jpg?v=1571449939',
-    creator: 'Angsty Guy',
-    date: '8/8/2008',
-  },
-  {
-    title: 'Chapel Thingy',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1024px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg',
-    creator: 'Yincent Yan Yo',
-    date: '11/13/2032',
-  },
-];
 
 class ArtList extends Component {
   state = {
-    artworks: dummyArtworks,
+    artworks: [],
     hoverIndex: -1,
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:3000/api/artworks')
+    .then(response => {
+      if (response.data) this.setState({ artworks: response.data });
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   handleMouseOver = (i) => {
@@ -43,6 +32,7 @@ class ArtList extends Component {
         {this.state.artworks.map((artwork, i) => {
           return (
             <ArtPost
+              key={i}
               onMouseOver={() => this.handleMouseOver(i)}
               onMouseOut={this.handleMouseOut}
               onClick={() => this.props.selectArtwork(artwork)}
@@ -86,6 +76,7 @@ const ArtPost = styled.div`
   margin-bottom: 80px;
   box-shadow: 0px 3px 15px #00000055;
   cursor: pointer;
+  text-align: center;
 `;
 
 const Artwork = styled.img`

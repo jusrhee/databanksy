@@ -1,56 +1,46 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import styled from 'styled-components';
-
-const dummyArtworks = [
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-];
 
 class DetailedView extends Component {
   state = {
-    exhibition: dummyArtworks,
+    exhibition: [],
+    artist: null,
     hoverIndex: -1,
+  }
+
+  componentDidMount() {
+    this.refreshArtist();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedArtwork.artwork_ID !== this.props.selectedArtwork.artwork_ID) {
+      this.refreshArtist();
+    }
+  }
+
+  refreshArtist = () => {
+    axios.get('http://localhost:3000/api/artworks/associated', {
+      params: {
+        id: this.props.selectedArtwork.creator_ID,
+      },
+    }).then(response => {
+      if (response.data) {
+        console.log('EXHIBITION IS', response.data);
+
+        this.setState({ exhibition: response.data });
+
+        axios.get('http://localhost:3000/api/artist', {
+          params: {
+            id: this.props.selectedArtwork.creator_ID
+          }
+        }).then(response => {
+          this.setState({ artist: response.data });
+        })
+      };
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   handleMouseOver = (i) => {
@@ -62,6 +52,10 @@ class DetailedView extends Component {
   }
 
   render() {
+    if (!this.state.artist) {
+      return null;
+    }
+
     const { selectedArtwork } = this.props;
     return (
       <StyledDetailedView>
@@ -69,8 +63,9 @@ class DetailedView extends Component {
           <InfoPanel>
             <ContentWrapper>
               <Title>{selectedArtwork.title}</Title>
-              <Artist>By {selectedArtwork.creator}</Artist>
-              <Date>Created on {selectedArtwork.date}</Date>
+              <Artist>By {this.state.artist.name}</Artist>
+              <Date>Created: {selectedArtwork.date}</Date>
+              <Bio>{this.state.artist.name}: {this.state.artist.bio}</Bio>
               <Tilde>~~~~~~~~~~~~~~~~</Tilde>
             </ContentWrapper>
           </InfoPanel>
@@ -171,6 +166,13 @@ const Artist = styled.div`
   font-size: 20px;
   margin-top: 10px;
   font-family: Helvetica, sans-serif;
+`;
+
+const Bio = styled.div`
+  font-size: 16px;
+  margin-top: 30px;
+  font-family: Helvetica, sans-serif;
+  color: #ababab;
 `;
 
 const TopSection = styled.div`
