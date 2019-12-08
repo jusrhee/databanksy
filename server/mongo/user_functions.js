@@ -83,3 +83,17 @@ module.exports.addUserSaved = (user_id, artwork_id) => {
         }
     });
 }
+
+module.exports.removeUserSaved = (user_id, artwork_id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await User.updateOne({ _id: user_id }, {
+                $pull: { saved: artwork_id }
+            });
+
+            resolve();
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
