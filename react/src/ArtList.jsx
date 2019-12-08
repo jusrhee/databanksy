@@ -27,7 +27,7 @@ const dummyArtworks = [
 const otherWorks = [
   {
     title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
+    image: 'http://www.moma.org/media/W1siZiIsIjQwMTk0OSJdLFsicCIsImNvbnZlcnQiLCItcmVzaXplIDMwMHgzMDBcdTAwM2UiXV0.jpg?sha=e3976db5fe3aba0e',
     creator: 'Japanese Dude',
     date: '7/18/1999',
   },
@@ -313,4 +313,5 @@ const StyledArtList = styled.div`
   white-space: nowrap;
   position: relative;
   display: inline-block;
+  overscroll-behavior-x: none;
 `;
