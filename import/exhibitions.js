@@ -5,7 +5,7 @@ const fs = require('fs')
 let add_count = 0; 
 
 
-fs.createReadStream('MoMAExhibitions1929to1989.csv')
+fs.createReadStream('./data/MoMAExhibitions1929to1989.csv')
   .pipe(csv())
   .on('data', async function(data) {
         try {
