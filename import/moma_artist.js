@@ -1,9 +1,6 @@
 const fs = require('fs')
 const JSONStream = require('JSONStream');
 const helpers = require('./sql/helpers.js');
-const request = require('request');
-
-let rows = [];
 
 let requestMomaArtists = () => {
     let stream = fs.createReadStream('./data/Artists.json', {encoding: 'utf8'});

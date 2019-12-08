@@ -1,17 +1,35 @@
 const mysql = require('mysql');
 
-let sql = mysql.createConnection({
+let sql1 = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : 'djkhaled',
   database : 'databanksy'
 });
 
-sql.connect();
+sql1.connect();
+
+let sql2 = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'djkhaled',
+  database : 'databanksy'
+});
+
+sql2.connect();
+
+let sql3 = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'djkhaled',
+  database : 'databanksy'
+});
+
+sql3.connect();
 
 module.exports.bulk_add_verified_ulan_artist = async (values) => {
     return new Promise((resolve, reject) => {
-        sql.query(
+        sql1.query(
           `INSERT IGNORE INTO ulan_artists 
           (ID, name, bio, note, role) 
           VALUES ?`, [values],
@@ -27,8 +45,11 @@ module.exports.bulk_add_verified_ulan_artist = async (values) => {
 }
 
 module.exports.find_ulan_artist = async (first, last) => {
+  first = first.replace("'", "''");
+  last = last.replace("'", "''");
+  
   return new Promise((resolve, reject) => {
-        sql.query(
+        sql1.query(
           `SELECT * 
           FROM ulan_artists 
           WHERE name LIKE '%${first}%' AND name LIKE '%${last}%' AND role LIKE '%artist%';`,
@@ -36,7 +57,7 @@ module.exports.find_ulan_artist = async (first, last) => {
             if (err) {
               reject(err);
             };
-            if (res.length == 1) {
+            if (res && res.length == 1) {
               resolve(res[0].ID);
             } else {
               resolve(null);
@@ -48,7 +69,7 @@ module.exports.find_ulan_artist = async (first, last) => {
 
 module.exports.add_verified_moma_artist = async (obj) => {
     let id = `"${obj.ConstituentID}"`;
-    let ulan_ID = obj.ulan_ID ? `"${obj.ulan_ID}"` : 'NULL';
+    let ulan_ID = obj.ulan_ID ? `${obj.ulan_ID}` : 'NULL';
     let name = `"${obj.DisplayName.replace(/"/g, '\\\"')}"`;
     let bio = obj.ArtistBio ? `"${obj.ArtistBio.replace(/"/g, '\\\"')}"` : 'NULL';
     let nationality = obj.Nationality ? `"${obj.Nationality}"` : 'NULL';
@@ -57,11 +78,9 @@ module.exports.add_verified_moma_artist = async (obj) => {
     let dataSource = obj.DataSource ? `"${obj.DataSource}"` : 'NULL';
 
     return new Promise((resolve, reject) => {
-        sql.query(
-          `INSERT IGNORE INTO moma_artists 
-          (ID, ulan_ID, name, bio, nationality, beginDate, endDate, dataSource) 
-          VALUES (${id}, ${ulan_ID}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, 
-          ${dataSource})`,
+        sql2.query(
+          `INSERT INTO moma_artists (ID, ulan_ID, name, bio, nationality, beginDate, endDate, dataSource) 
+          VALUES (${id}, ${ulan_ID}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, ${dataSource})`,
           function(err, res) {
             if (err) {
               reject(err);
@@ -76,17 +95,14 @@ module.exports.add_verified_moma_artist = async (obj) => {
 module.exports.verify_moma_artist_exists = (artist_id) => {
     // TODO - SQL STATEMENT HERE, RESOLVE AFTER SUCCESS
     return new Promise((resolve, reject) => {
-        sql.query(
+        sql3.query(
           `SELECT * FROM moma_artists WHERE ID="${artist_id}" LIMIT 1`,
           function(err, res) {
             if (err) {
               reject(err);
             };
-            if (res.length > 0) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
+
+            resolve(res && res.length > 0);
           }
         );
     })
@@ -103,7 +119,7 @@ module.exports.add_verified_artwork = async (obj) => {
     let image = obj.ThumbnailURL ? `"${obj.ThumbnailURL}"` : 'NULL';
 
     return new Promise((resolve, reject) => {
-        sql.query(
+        sql2.query(
           `INSERT INTO artworks 
           (artwork_ID, creator_ID, title, date, cataloged, classification,
           dataSource, image) 
@@ -113,7 +129,7 @@ module.exports.add_verified_artwork = async (obj) => {
             if (err) {
               reject(err);
             } else {
-		resolve(true);
+		          resolve(true);
             }
           }
         );
@@ -130,7 +146,7 @@ module.exports.add_verified_exhibition = async (obj) => {
     let artist_type = obj.ConstituentType ? `"${obj.ConstituentType}"` : 'NULL';
 
     return new Promise((resolve, reject) => {
-        sql.query(
+        sql2.query(
           `INSERT INTO exhibitions 
           (exhibition_ID, title, beginDate, endDate, role, artist_ID, artist_type) 
           VALUES (${exhibition_ID}, ${title}, ${beginDate}, ${endDate}, ${role}, ${artist_ID},

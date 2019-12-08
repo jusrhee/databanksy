@@ -3,7 +3,7 @@ const path = require("path");
 const XmlStream = require('xml-stream')
 const helpers = require('./sql/helpers.js');
 
-var stream = fs.createReadStream(path.join(__dirname, '/data/ULAN1.xml'));
+var stream = fs.createReadStream(path.join(__dirname, '/data/ULAN4.xml'));
 var xml = new XmlStream(stream);
 
 xml.preserve('Subject', true);
@@ -80,11 +80,11 @@ xml.on('endElement: Subject', function(subject) {
 
     if (obj.name && obj.bio && obj.note && obj.role !== undefined) {
         try {
-            let id = `"${obj.id}"`;
-            let name = `"${obj.name}"`;
-            let bio = obj.bio ? `"${obj.bio}"` : 'NULL';
-            let note = obj.note ? `"${obj.note}"` : 'NULL';
-            let role = obj.role ? `"${obj.role}"` : 'NULL';
+            let id = `${obj.id}`;
+            let name = `${obj.name}`;
+            let bio = obj.bio ? `${obj.bio}` : 'NULL';
+            let note = obj.note ? `${obj.note}` : 'NULL';
+            let role = obj.role ? `${obj.role}` : 'NULL';
 
             data.push([id, name, bio, note, role]);
 
@@ -101,7 +101,7 @@ xml.on('endElement: Subject', function(subject) {
 xml.on('end', async function() {
     let json = JSON.stringify(data);
 
-    fs.writeFile('./data/ULAN1.json', json, 'utf8');
+    fs.writeFile('./data/ULAN4.json', json, 'utf8');
 
     console.log('writing ended, added', count, data.length);
 });
