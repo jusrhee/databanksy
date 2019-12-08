@@ -55,7 +55,8 @@ class ArtList extends Component {
   state = {
     artworks: dummyArtworks,
     hoverIndex: -1,
-    name: 'Databanksy.'
+    name: 'Databanksy.',
+    similar: false,
   }
 
   componentDidMount() {
@@ -94,6 +95,27 @@ class ArtList extends Component {
     }
   }
 
+  renderToggle = () => {
+    if (this.state.name !== 'Databanksy.') {
+      return (
+        <Toggle>
+          <ToggleOption
+            selected={!this.state.similar}
+            onClick={() => this.setState({ similar: false })}
+          >
+            Artist Only
+          </ToggleOption>
+          <ToggleOption
+            selected={this.state.similar}
+            onClick={() => this.setState({ similar: true })}
+          >
+            View Similar
+          </ToggleOption>
+        </Toggle>
+      );
+    }
+  }
+
   render() {
     return (
       <StyledArtList ref={this.myRef}>
@@ -104,6 +126,7 @@ class ArtList extends Component {
           >
             {this.state.name}
           </Name>
+          {this.renderToggle()}
           <Line firstRender={this.props.firstRender} />
         </Greeting>
         {this.state.artworks.map((artwork, i) => {
@@ -148,6 +171,27 @@ class ArtList extends Component {
 }
 
 export default ArtList;
+
+const Toggle = styled.div`
+  position: absolute;
+  top: 36vh;
+  width: 400px;
+  left: 20px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const ToggleOption = styled.div`
+  background: ${props => props.selected ? '#00000022' : ''};
+  padding: 15px;
+  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
+  font-family: Merriweather, serif;
+  margin-right: 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer
+`;
 
 const Label = styled.div`
   @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
@@ -254,7 +298,7 @@ const Name = styled.div`
   font-family: 'Source Serif Pro', serif;
   font-size: ${props => props.shrink ? '50px' : '80px'};
   position: absolute;
-  top: ${props => props.shrink ? '35vh' : '30vh'};
+  top: ${props => props.shrink ? '26vh' : '30vh'};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -266,7 +310,7 @@ const Name = styled.div`
   animation-fill-mode: forwards;
   @keyframes float-greeting {
     from { top: 40vh; opacity: 0; }
-    to   { top: ${props => props.shrink ? '35vh' : '30vh'}; opacity: 1; }
+    to   { top: ${props => props.shrink ? '26vh' : '30vh'}; opacity: 1; }
   }
 `;
 
