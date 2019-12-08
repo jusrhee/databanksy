@@ -8,7 +8,7 @@ import LoginWrapper from './LoginWrapper';
 
 class App extends Component {
   state = {
-    loggedIn: true,
+    loggedIn: false,
   }
 
   componentDidMount() {

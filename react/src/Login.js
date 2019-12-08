@@ -198,13 +198,13 @@ const SubmitButton = styled.button`
   text-align: left;
   border: 0;
   border-radius: 5px;
-  background: #839DFF;
+  background: #515569;
   margin-top: 21px;
   box-shadow: 0 2px 5px 0 #00000030;
   cursor: pointer;
   user-select: none;
   :focus { outline: 0 }
-  :hover { background: #6181f9 }
+  :hover { background: #343745 }
   > i {
     display: inline-block;
     float: right;
