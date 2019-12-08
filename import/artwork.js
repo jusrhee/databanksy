@@ -4,7 +4,7 @@ const helpers = require('./sql/helpers.js');
 const request = require('request');
 
 let requestMomaArtworks = () => {
-    let stream = fs.createReadStream('./Artworks.json', {encoding: 'utf8'});
+    let stream = fs.createReadStream('./data/Artworks.json', {encoding: 'utf8'});
     let parser = JSONStream.parse('*'); 
 
     stream.pipe(parser);
