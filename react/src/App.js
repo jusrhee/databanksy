@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import Home from './Home';
+import Login from './Login';
 
-function App() {
-  return (
-    <div className="App">
-      <Home />
-    </div>
-  );
+class App extends Component {
+  state = {
+    loggedIn: false,
+  }
+
+  renderContent = () => {
+    if (this.loggedIn) {
+      return <Home />
+    }
+    return <Login />
+  }
+
+  render() {
+    return (
+      <div className="App">
+        {this.renderContent()}
+      </div>
+    );
+  }
 }
 
 export default App;
