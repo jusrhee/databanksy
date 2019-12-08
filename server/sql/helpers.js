@@ -12,7 +12,7 @@ sql.connect();
 module.exports.get_artworks = () => {
     return new Promise((resolve, reject) => {
         sql.query(
-          `SELECT * FROM artworks LIMIT 60, 20`,
+          `SELECT * FROM artworks LIMIT 2000, 20`,
           function(err, res) {
             if (err) {
               reject(err);

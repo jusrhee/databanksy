@@ -34,7 +34,7 @@ let routes = (store) => {
     app.post('/api/user/logout', userController.user_logout_post);
     app.post('/api/user/artwork/add', authorizer.verify_logged_in, userController.user_artwork_add_post);
 
-    app.get('/api/artworks', authorizer.verify_logged_in, artworkController.get_artworks);
+    app.get('/api/artworks', artworkController.get_artworks);
     app.get('/api/artworks/associated', authorizer.verify_logged_in, artworkController.get_associated_artworks);
 
     app.get('/api/artist', authorizer.verify_logged_in, artistController.get_artist);
