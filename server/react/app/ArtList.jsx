@@ -12,7 +12,7 @@ class ArtList extends Component {
 
   componentDidUpdate(prevProps) {
     // Reset exhibit
-    if (this.props.currentScreen !== prevProps.currentScreen) {
+    if (this.props.name !== prevProps.name) {
       this.myRef.current.scrollTo(0, 0);
     }
   }
@@ -27,7 +27,7 @@ class ArtList extends Component {
 
   render() {
     return (
-      <StyledArtList ref={this.myRef}>
+      <StyledArtList ref={this.myRef} fill={this.props.artworks.length === 0}>
         <Greeting>
           <Name
             firstRender={this.props.firstRender}
@@ -63,7 +63,7 @@ class ArtList extends Component {
                       <i className="material-icons">info</i>
                       <Label>Info</Label>
                     </OptionButton>
-                    <OptionButton onClick={() => this.props.getArtworks(artwork)}>
+                    <OptionButton onClick={() => this.props.getArtworks('Home', artwork)}>
                       <i className="material-icons">brush</i>
                       <Label>Exhibit</Label>
                     </OptionButton>
@@ -126,7 +126,6 @@ const Bufferer = styled.div`
 
 const Greeting = styled.span`
   display: inline-block;
-  background: red;
   position: absolute;
   top: 0;
   left: 0;
@@ -244,6 +243,7 @@ const StyledArtList = styled.div`
   padding-top: calc(50vh - 320px);
   padding-bottom: calc(50vh - 255px);
   padding-left: 600px;
+  height: ${props => props.fill ? '600px' : 'auto'};
   float: left;
   overflow-x: auto;
   white-space: nowrap;

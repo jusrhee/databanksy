@@ -34,12 +34,11 @@ class Home extends Component {
   getInitial = () => {
     axios.get('/api/artworks')
     .then(response => {
-      if (response.data) {
-        this.setState({ 
-          artworks: response.data,
-          name: 'Databanksy.'
-        });
-      }
+      this.setState({ 
+        artworks: response.data,
+        currentScreen: 'Home',
+        name: 'Databanksy.'
+      });
     })
     .catch(error => {
       console.log(error)
@@ -47,11 +46,9 @@ class Home extends Component {
 
     axios.get('/api/user/saved')
     .then(response => {
-      if (response.data) {
-        this.setState({ 
-          saved: response.data
-        });
-      }
+      this.setState({ 
+        saved: response.data
+      });
     })
     .catch(error => {
       console.log(error)
@@ -59,8 +56,7 @@ class Home extends Component {
   }
 
   getArtworks = (screen, selectedArtwork, user) => {
-    this.setState({ 
-      currentScreen: screen,
+    this.setState({
       firstRender: false
     });
 
@@ -73,7 +69,6 @@ class Home extends Component {
         },
       })
       .then(response => {
-        if (response.data) {
           let sorting = this.state.saved;
           let items = response.data; 
 
@@ -84,15 +79,29 @@ class Home extends Component {
 
           this.setState({ 
             artworks: result,
-            name: this.state.user.username
+            name: this.state.user.username,
+            currentScreen: screen
           });
-        }
       })
       .catch(error => {
         console.log(error)
       })
     } else if (selectedArtwork) {
-
+      axios.get('/api/artworks/associated', {
+        params: {
+          id: selectedArtwork.creator_ID
+        }
+      })
+      .then(response => {
+        this.setState({ 
+            artworks: response.data,
+            name: selectedArtwork.name,
+            currentScreen: screen,
+          });
+      })
+      .catch(error => {
+        console.log(error)
+      })
     }
   }
 
@@ -142,7 +151,6 @@ class Home extends Component {
             name={this.state.name}
             saved={this.state.saved}
             saveArtwork={this.saveArtwork}
-            currentScreen={this.state.currentScreen}
           />
         );
         break;

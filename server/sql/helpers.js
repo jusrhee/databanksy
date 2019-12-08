@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const _ = require('underscore');
 
 let sql = mysql.createConnection({
   host     : 'localhost',
@@ -17,7 +18,8 @@ module.exports.get_artworks = () => {
           INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
           INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
           WHERE a1.ulan_ID IS NOT NULL
-          LIMIT 20
+          ORDER BY RAND()
+          LIMIT 20;
           `,
           function(err, res) {
             if (err) {
@@ -71,35 +73,25 @@ module.exports.get_associated_artworks = (id) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
-          `SELECT *
-            FROM
-                artworks AW,
-                (
-                SELECT
-                    E1.artist_ID
-                FROM
-                    exhibitions E1,
-                    (
-                    SELECT
-                        *
-                    FROM
-                        exhibitions
-                    WHERE
-                        artist_ID = ${artist_ID}
-                    LIMIT 1
-                    ) as E2
-                WHERE
-                    E1.exhibition_ID = E2.exhibition_ID and
-                    E1.artist_ID <> E2.artist_ID
-                LIMIT 1
-                ) as AT
-            WHERE AW.creator_ID = AT.artist_ID;`,
+            `SELECT DISTINCT a2.*, a1.*, a3.bio, a3.note, a3.role
+            FROM exhibitions a4
+            INNER JOIN exhibitions a5 ON a5.exhibition_ID=a4.exhibition_ID AND a5.artist_ID<>${artist_ID}
+            INNER JOIN moma_artists a1 ON a1.ID=(
+              SELECT a.ID
+              FROM moma_artists a 
+              WHERE a.ID=a5.artist_ID
+              LIMIT 1
+            )
+            INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+            INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
+            WHERE a4.artist_ID=${artist_ID}
+            LIMIT 100`,
           async function(err, res) {
             if (err) {
               reject(err);
             };
 
-            resolve(res);
+            resolve(_.sample(res, 20));
           }
         );
     })
