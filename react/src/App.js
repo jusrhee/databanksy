@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Home from './Home';
-import Login from './Login';
+import LoginWrapper from './LoginWrapper';
 
 class App extends Component {
   state = {
@@ -12,7 +12,7 @@ class App extends Component {
     if (this.loggedIn) {
       return <Home />
     }
-    return <Login />
+    return <LoginWrapper />
   }
 
   render() {
