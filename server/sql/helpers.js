@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 let sql = mysql.createConnection({
-  host     : 'http://34.69.32.88',
+  host     : 'localhost',
   user     : 'root',
   password : 'djkhaled',
   database : 'databanksy'
@@ -18,8 +18,6 @@ module.exports.get_artworks = () => {
               reject(err);
             };
 
-            console.log(res);
-
             resolve(res);
           }
         );
@@ -28,9 +26,6 @@ module.exports.get_artworks = () => {
 
 
 let get_artists_artworks = (id) => {
-
-    console.log(`SELECT * FROM artworks WHERE creator_ID="${id}" LIMIT 20;`);
-
     return new Promise((resolve, reject) => {
         sql.query(
           `SELECT * FROM artworks WHERE creator_ID="${id}" LIMIT 20;`,
@@ -79,14 +74,6 @@ module.exports.get_associated_artworks = (id) => {
             };
 
             resolve(res);
-
-            /*if (res.length == 0) {
-                let res = await get_artists_artworks(id);
-
-                resolve(res);
-            } else {
-                resolve(res);
-            }*/
           }
         );
     })
@@ -104,6 +91,21 @@ module.exports.get_artist = (id) => {
             };
 
             if (res[0]) resolve(res[0]);
+          }
+        );
+    })
+}
+
+module.exports.verify_artwork_exists = (artwork_id) => {
+    return new Promise((resolve, reject) => {
+        sql3.query(
+          `SELECT * FROM artworks WHERE artwork_ID="${artwork_id}" LIMIT 1`,
+          function(err, res) {
+            if (err) {
+              reject(err);
+            };
+
+            resolve(res && res.length > 0);
           }
         );
     })
