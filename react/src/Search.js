@@ -9,7 +9,6 @@ class Search extends Component {
   }
 
   handleSearch = () => {
-    alert(this.state.searchText)
   }
 
   handleChange = (event) => {
