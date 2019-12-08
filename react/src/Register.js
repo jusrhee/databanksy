@@ -2,21 +2,34 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-class Login extends Component {
+class Register extends Component {
+  emailRef = React.createRef();
   usernameRef = React.createRef();
-
   passwordRef = React.createRef();
 
   state = {
+    role: this.props.email ? 'instructor' : 'student',
+    email: null,
     username: null,
     password: null,
+    emailError: null,
     usernameError: null,
     passwordError: null,
     loader: false,
+    toggleNewsletter: false,
   }
 
   componentDidMount() {
-    this.usernameRef.current.focus();
+    if (this.props.email) {
+      this.emailRef.current.value = this.props.email;
+      this.usernameRef.current.focus();
+    } else {
+      this.emailRef.current.focus();
+    }
+  }
+
+  handleEmailChange = () => {
+    this.setState({ email: this.emailRef.current.value });
   }
 
   handleUsernameChange = () => {
@@ -32,28 +45,45 @@ class Login extends Component {
 
     this.setState({ loader: true });
 
-    axios.post('http://localhost:3000/api/user/login', {
+    const urlParams = new URLSearchParams(window.location.search);
+    const demo = urlParams.get('demo');
+
+    axios.post('/api/user/create', {
+      role: demo ? 'instructor' : 'student',
+      email: this.state.email,
       username: this.state.username,
       password: this.state.password,
-    }).then(() => {
+    }).then((res) => {
       // Do stuff
     }).catch((e) => {
       const err = e.response.data;
 
       if (err.code === 0) {
-        this.setState({ loader: false, usernameError: err.message, passwordError: null });
+        this.setState({
+          loader: false, emailError: err.message, usernameError: null, passwordError: null,
+        });
       } else if (err.code === 1) {
-        this.setState({ loader: false, usernameError: null, passwordError: err.message });
+        this.setState({
+          loader: false, emailError: null, usernameError: err.message, passwordError: null,
+        });
+      } else if (err.code === 2) {
+        this.setState({
+          loader: false, emailError: null, usernameError: null, passwordError: err.message,
+        });
       }
     });
 
     return false;
   }
 
+  toggleNewsletter = () => {
+    this.setState({ newsletter: !this.state.newsletter });
+  }
+
   render() {
     let submit = (
       <SubmitButton>
-Log In
+Register
         <i className="material-icons">chevron_right</i>
       </SubmitButton>
     );
@@ -61,17 +91,18 @@ Log In
     if (this.state.loader) {
       submit = (
         <SubmitButton>
-Log In
+Register
           <Loader className="loader" />
         </SubmitButton>
       );
     }
 
-
     return (
-      <LoginFormContainer>
-        <LoginFormHeader>Log In</LoginFormHeader>
+      <LoginFormContainer halfScreen={this.props.halfScreen}>
+        <LoginFormHeader>Register</LoginFormHeader>
         <LoginFormBody onSubmit={this.handleSubmit}>
+          <Input required ref={this.emailRef} onChange={this.handleEmailChange} placeholder="Email" type="text" name="email" />
+          <InputError>{this.state.emailError}</InputError>
           <Input required ref={this.usernameRef} onChange={this.handleUsernameChange} placeholder="Username" type="text" name="username" />
           <InputError>{this.state.usernameError}</InputError>
           <Input required ref={this.passwordRef} onChange={this.handlePasswordChange} placeholder="Password" type="password" name="password" />
@@ -79,14 +110,14 @@ Log In
           {submit}
         </LoginFormBody>
         <Helper>
-          Need an account? <Jump onClick={() => this.props.setRegister(true)}>Sign Up</Jump>
+          Have an account? <Jump onClick={() => this.props.setRegister(false)}>Log In</Jump>
         </Helper>
       </LoginFormContainer>
     );
   }
 }
 
-export default Login;
+export default Register;
 
 const Jump = styled.div`
   display: inline;
@@ -105,7 +136,7 @@ const LoginFormContainer = styled.div`
   left: 0;
   right: 0;
   margin: 0 auto;
-  top: calc(40vh - 80px);
+  top: calc(40vh - 110px);
   left: calc(50vw - 180px);
 `;
 
@@ -116,12 +147,41 @@ const LoginFormHeader = styled.div`
   font-size: 30px;
   color: #ffffff;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 13px;
 `;
 
 const LoginFormBody = styled.form`
   display: inline-block;
   width: 100%;
+`;
+
+
+const RoleSelector = styled.div`
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 4px;
+`;
+
+const Role = styled.div`
+    position: relative;
+    display: inline-block;
+    float: center;
+    width: 140px;
+    height: 40px;
+    margin: 0 10px;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 18px;
+    padding-top: 2.5px;
+    color: #bbb;
+    > i {
+      display: inline-block;
+      margin-top: -2.5px;
+      margin-right: 4px;
+      vertical-align: middle;
+      cursor: pointer;
+      color: ${(props) => (props.checked ? '#ccc' : '#ccc')};
+    }
 `;
 
 const Input = styled.input`
@@ -162,23 +222,6 @@ const InputError = styled.div`
     font-family: 'Noto Sans', sans-serif;
     margin-bottom: 0px;
     color: #ccc;
-`;
-
-const LoginFormFooter = styled.div`
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    font-family: 'Noto Sans', sans-serif;
-    font-size: 18px;
-    color: #777;
-    margin-top: 6px;
-    margin-bottom: 34px;
-    > a {
-      display: inline-block;
-      margin-left: 16px;
-      text-decoration: none;
-      color: #6F9FFF;
-    }
 `;
 
 const SubmitButton = styled.button`

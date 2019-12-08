@@ -4,6 +4,8 @@ import Home from './Home';
 import Login from './Login';
 import axios from 'axios';
 
+import LoginWrapper from './LoginWrapper';
+
 class App extends Component {
   state = {
     loggedIn: false,
@@ -20,7 +22,7 @@ class App extends Component {
     if (this.state.loggedIn) {
       return <Home />
     }
-    return <Login />
+    return <LoginWrapper />
   }
 
   render() {
