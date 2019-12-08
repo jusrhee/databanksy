@@ -29,10 +29,30 @@ let start = async () => {
 }
 
 let routes = (store) => {
+    // top-level html routes 
+    app.get(['/accounts', '/accounts/*'], (req, res) => {
+        if (req.user) {
+            res.redirect('/app');
+        } else {
+            res.sendFile(__dirname + '/build/accounts/accounts.html');
+        }
+    });
+
+    app.get(['/app', '/app/*'], (req, res) => {
+        if (!req.user || !!req.user.session) {
+            res.redirect('/accounts');
+        } else {
+            res.sendFile(__dirname + '/build/app/app.html');
+        }
+    });
+
+    app.get('/api/user', authorizer.verify_logged_in, userController.user_get);
     app.get('/api/user/saved', authorizer.verify_logged_in, userController.user_artwork_saved_get);
     app.post('/api/user/login', (req, res) => userController.user_login_post(req, res, store));
+    app.post('/api/user/create', (req, res) => userController.user_create_post(req, res, store));
     app.post('/api/user/logout', userController.user_logout_post);
     app.post('/api/user/artwork/add', authorizer.verify_logged_in, userController.user_artwork_add_post);
+    app.post('/api/user/artwork/remove', authorizer.verify_logged_in, userController.user_artwork_remove_post);
 
     app.get('/api/artworks', authorizer.verify_logged_in, artworkController.get_artworks);
     app.get('/api/artworks/associated', authorizer.verify_logged_in, artworkController.get_associated_artworks);

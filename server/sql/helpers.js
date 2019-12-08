@@ -12,7 +12,13 @@ sql.connect();
 module.exports.get_artworks = () => {
     return new Promise((resolve, reject) => {
         sql.query(
-          `SELECT * FROM artworks LIMIT 60, 20`,
+          `SELECT a1.*, a2.*, a3.bio, a3.note, a3.role
+          FROM moma_artists a1
+          INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+          INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
+          WHERE a1.ulan_ID IS NOT NULL
+          LIMIT 20
+          `,
           function(err, res) {
             if (err) {
               reject(err);
@@ -24,6 +30,26 @@ module.exports.get_artworks = () => {
     })
 }
 
+module.exports.populate_artworks = (values) => {
+    return new Promise((resolve, reject) => {
+        sql.query(
+          `SELECT a1.*, a2.*, a3.bio, a3.note, a3.role
+          FROM moma_artists a1
+          INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+          INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
+          WHERE a2.artwork_ID IN (${values})
+          LIMIT 20
+          `,
+          function(err, res) {
+            if (err) {
+              reject(err);
+            };
+
+            resolve(res);
+          }
+        );
+    })
+}
 
 let get_artists_artworks = (id) => {
     return new Promise((resolve, reject) => {
@@ -98,7 +124,7 @@ module.exports.get_artist = (id) => {
 
 module.exports.verify_artwork_exists = (artwork_id) => {
     return new Promise((resolve, reject) => {
-        sql3.query(
+        sql.query(
           `SELECT * FROM artworks WHERE artwork_ID="${artwork_id}" LIMIT 1`,
           function(err, res) {
             if (err) {

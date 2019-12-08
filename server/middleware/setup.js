@@ -28,7 +28,10 @@ let setup = (app, config) => {
         require('./passport')();
         console.log('🌱   added passport');
 
-        resolve();
+        await startWebpack(app);
+        console.log('🌱   started webpack...');
+
+        resolve(sessionStore);
     });
 }
 
@@ -86,6 +89,28 @@ let configureExpress = (app, config, store) => {
 
     app.use(passport.initialize());
     app.use(passport.session());
+}
+
+let startWebpack = (app) => {
+    return new Promise((resolve, reject) => {
+        if (process.env.NODE_ENV !== 'production') {
+            const webpack = require('webpack');
+            const webpackConfig = require('../webpack.config.js');
+            const compiler = webpack(webpackConfig);
+
+            app.use(require("webpack-dev-middleware")(compiler, {
+                logLevel: 'error', publicPath: '/', watchOptions: { poll: 500 }
+            }));
+
+            app.use(require("webpack-hot-middleware")(compiler, {
+                logLevel: 'error'
+            }));
+
+            resolve();
+        } else {
+            resolve();
+        }
+    });
 }
 
 module.exports = setup;

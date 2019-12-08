@@ -32,7 +32,7 @@ class Login extends Component {
 
     this.setState({ loader: true });
 
-    axios.post('/api/user/login', {
+    axios.post('http://localhost:3000/api/user/login', {
       username: this.state.username,
       password: this.state.password,
     }).then(() => {

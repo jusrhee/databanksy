@@ -6,6 +6,7 @@ module.exports.get_artworks = async (req, res) => {
 
         res.status(200).send(resp);
     } catch (e) {
+        console.error(e);
         res.status(500).send('Internal server error');
     } 
 }
@@ -20,6 +21,7 @@ module.exports.get_associated_artworks = async (req, res) => {
 
         res.status(200).send(resp);
     } catch (e) {
+        console.error(e);
         res.status(500).send('Internal server error');
     } 
 }
