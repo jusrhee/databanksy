@@ -30,6 +30,14 @@ let start = async () => {
 
 let routes = (store) => {
     // top-level html routes 
+    app.get('/', (req, res) => {
+        if (req.user) {
+            res.redirect('/app');
+        } else {
+            res.redirect('/accounts');
+        }
+    });
+
     app.get(['/accounts', '/accounts/*'], (req, res) => {
         if (req.user) {
             res.redirect('/app');

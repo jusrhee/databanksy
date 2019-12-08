@@ -87,7 +87,7 @@ const Tilde = styled(Date)`
 `;
 
 const ContentWrapper = styled.div`
-  margin-top: -10px;
+  margin-top: 0px;
   max-height: 70%;
   overflow-y: auto;
   padding-right: 20px;
@@ -113,8 +113,10 @@ const Bio = styled.div`
 `;
 
 const Artwork = styled.img`
-  max-width: 80%;
-  max-height: 80%;
+  min-height: 40%;
+  max-width: 90%;
+  margin-top: -5%;
+  max-height: 70%;
   margin-right: 60px;
   box-shadow: 0px 3px 15px #00000055;
 `;

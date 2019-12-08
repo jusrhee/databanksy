@@ -249,4 +249,5 @@ const StyledArtList = styled.div`
   white-space: nowrap;
   position: relative;
   display: inline-block;
+  overscroll-behavior-x: none;
 `;

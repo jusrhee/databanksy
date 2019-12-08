@@ -13,7 +13,7 @@ let config = {
         use: ['babel-loader']
       },
       {
-        test: /\.(png|svg|jpg|gif|mp3)$/,
+        test: /\.(png|svg|jpg|jpeg|gif|mp3)$/,
         use: [
           'file-loader'
         ]
