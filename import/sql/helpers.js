@@ -12,7 +12,7 @@ sql.connect();
 module.exports.bulk_add_verified_ulan_artist = async (values) => {
     return new Promise((resolve, reject) => {
         sql.query(
-          `INSERT INTO ulan_artists 
+          `INSERT IGNORE INTO ulan_artists 
           (ID, name, bio, note, role) 
           VALUES ?`, [values],
           function(err, res) {
@@ -58,7 +58,7 @@ module.exports.add_verified_moma_artist = async (obj) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
-          `INSERT INTO moma_artists 
+          `INSERT IGNORE INTO moma_artists 
           (ID, ulan_ID, name, bio, nationality, beginDate, endDate, dataSource) 
           VALUES (${id}, ${ulan_ID}, ${name}, ${bio}, ${nationality}, ${beginDate}, ${endDate}, 
           ${dataSource})`,
