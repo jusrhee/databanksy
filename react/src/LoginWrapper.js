@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import Login from './Login';
 import Register from './Register';
-import bg from './empire_of_light.jpg';
+import bg from './nighthawks.jpg';
 
 class LoginWrapper extends Component {
 
@@ -42,7 +42,7 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background: #00000088;
+  background: #000000cc;
 `;
 
 const BgImage = styled.img`

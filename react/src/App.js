@@ -5,11 +5,11 @@ import LoginWrapper from './LoginWrapper';
 
 class App extends Component {
   state = {
-    loggedIn: false,
+    loggedIn: true,
   }
 
   renderContent = () => {
-    if (this.loggedIn) {
+    if (this.state.loggedIn) {
       return <Home />
     }
     return <LoginWrapper />
