@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
+import google from './google.png';
+
 class Register extends Component {
   emailRef = React.createRef();
   usernameRef = React.createRef();
@@ -111,6 +113,10 @@ Register
         <Helper>
           Have an account? <Jump onClick={() => this.props.setRegister(false)}>Log In</Jump>
         </Helper>
+        <GoogleButtonContainer href="/auth/google/login">
+          <GoogleImage src={google} />
+          Sign Up with Google
+        </GoogleButtonContainer>
       </LoginFormContainer>
     );
   }
@@ -135,7 +141,7 @@ const LoginFormContainer = styled.div`
   left: 0;
   right: 0;
   margin: 0 auto;
-  top: calc(40vh - 110px);
+  top: calc(40vh - 130px);
   left: calc(50vw - 180px);
 `;
 
@@ -154,6 +160,31 @@ const LoginFormBody = styled.form`
   width: 100%;
 `;
 
+const GoogleButtonContainer = styled.a`
+  text-decoration: none;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 300px;
+  height: 54px; 
+  border-radius: 5px;
+  padding: 14px 24px;
+  background-color: white;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Work Sans', sans-serif;
+  color: #333;
+  cursor: pointer;
+`;
+
+const GoogleImage = styled.img`
+  position: relative;
+  display: inline-block;
+  top: 3px; 
+  left: 0; 
+  width: 18px;
+  margin-right: 18px;
+`
 
 const RoleSelector = styled.div`
     position: relative;

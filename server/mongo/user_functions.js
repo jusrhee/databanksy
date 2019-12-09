@@ -34,6 +34,18 @@ module.exports.createUser = (options) => {
     });
 }
 
+module.exports.getUserByGoogleId = (g_id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await User.findOne({ g_id: g_id });
+
+            resolve(user);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
 module.exports.getUserByUsername = (username) => {
     return new Promise(async (resolve, reject) => {
         try {
