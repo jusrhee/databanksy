@@ -150,7 +150,7 @@ class Home extends Component {
         artwork_id: artwork_ID
       }).then((res) => {
 
-        saved.push(artwork_ID);
+        saved.unshift(artwork_ID);
 
         this.setState({ saved });
       })
@@ -299,7 +299,7 @@ const StyledLink = styled(Link)`
 const ModalWrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: #000112de;
+  background: #000112ee;
   position: fixed;
   top: 0;
   left: 0;

@@ -13,10 +13,10 @@ module.exports.user_get = async (req, res) => {
 
 module.exports.user_artwork_saved_get = async (req, res) => {
     try {
-        let saved = await UserService.getUserSaved(req.user._id);
+        let saved = (await UserService.getUserSaved(req.user._id)).reverse();
 
         if (req.query.populate && saved.length > 0) {
-            saved = await query.populate_artworks(saved);
+            saved = (await query.populate_artworks(saved)).reverse();
         }
 
         res.status(200).json(saved);

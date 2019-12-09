@@ -3,11 +3,54 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 class ArtworkModal extends Component {
+  state = {
+    showTemp: true,
+    wider: -1,
+  }
+
+  componentDidMount() {
+    let { clientHeight, clientWidth } = this.refs.artwork;
+  }
+
+  renderTemp = () => {
+    if (this.state.showTemp) {
+      return (
+        <Temp>
+          <ArtworkAlt onMouseOver={() => {this.setState({ showTemp: false })}} ref='artwork' src={this.props.selectedArtwork.image} />
+        </Temp>
+      )
+    }
+    if (this.refs.artwork) {
+      if (this.refs.artwork.clientWidth !== 0) {
+        if (this.refs.artwork.clientWidth > this.refs.artwork.clientHeight) {
+          if (this.state.wider !== 0) {
+            this.setState({ wider: 0 });
+          }
+        } else {
+          if (!this.state.wider !== 1) {
+            this.setState({ wider: 1 });
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  renderArtwork = () => {
+    if (this.state.wider >= 0) {
+      console.log(this.state.wider);
+      return <Artwork src={this.props.selectedArtwork.image} wider={this.state.wider === 0} />
+    }
+    return null;
+  }
 
   render() {
     const { selectedArtwork } = this.props;
     return (
       <StyledDetailedView>
+      <ArtworkContainer>
+        {this.renderArtwork()}
+      </ArtworkContainer>
       <InfoPanel>
         <ContentWrapper>
           <Title>{selectedArtwork.title}</Title>
@@ -17,18 +60,28 @@ class ArtworkModal extends Component {
           <Bio>Artist Information: {selectedArtwork.bio} <br /><br />{selectedArtwork.note}</Bio>
         </ContentWrapper>
       </InfoPanel>
-      <ArtworkContainer>
-        <Artwork src={selectedArtwork.image} />
-      </ArtworkContainer>
       <CloseButton onClick={() => this.props.selectArtwork(null)}>
         <i className="material-icons">close</i>
       </CloseButton>
+      {this.renderTemp()}
       </StyledDetailedView>
     );
   }
 }
 
 export default ArtworkModal;
+
+const ArtworkAlt = styled.img`
+  height: 1000%;
+  opacity: 0;
+`;
+const Temp = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+`;
 
 const CloseButton = styled.div`
   position: absolute;
@@ -53,7 +106,7 @@ const StyledDetailedView = styled.div`
 `;
 
 const InfoPanel = styled.div`
-  margin-left: 100px;
+  margin-right: 100px;
   min-width: 20%;
   max-width: 30%;
   height: 100%;
@@ -66,7 +119,8 @@ const InfoPanel = styled.div`
 const ArtworkContainer = styled.div`
   height: 100%;
   width: 200%;
-  margin-right: 60px;
+  margin-right: 0px;
+  padding-left: 80px;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -113,10 +167,9 @@ const Bio = styled.div`
 `;
 
 const Artwork = styled.img`
-  min-height: 40%;
-  max-width: 90%;
+  height: ${props => !props.wider ? '80%' : ''};
+  width: ${props => props.wider ? '80%' : ''};
   margin-top: -5%;
-  max-height: 70%;
   margin-right: 60px;
   box-shadow: 0px 3px 15px #00000055;
 `;

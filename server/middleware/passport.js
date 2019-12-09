@@ -66,7 +66,6 @@ let res = (app) => {
       clientSecret: 'AmgPrkg4jQYK97k9Sz6GACoM',
       callbackURL: '/auth/google/callback'
     }, async (token, refreshToken, profile, done) => {
-      // TODO -- CHECK IF USER EXISTS, CREATE NEW USER IF THEY DO NOT EXIST
       try {
           let user = await UserService.getUserByGoogleId(profile.id);
 

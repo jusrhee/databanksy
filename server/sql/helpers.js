@@ -40,7 +40,6 @@ module.exports.populate_artworks = (values) => {
           INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
           INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
           WHERE a2.artwork_ID IN (${values})
-          LIMIT 20
           `,
           function(err, res) {
             if (err) {
