@@ -48,7 +48,7 @@ class Register extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const demo = urlParams.get('demo');
 
-    axios.post('http://localhost:3000/api/user/create', {
+    axios.post('/api/user/create', {
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
