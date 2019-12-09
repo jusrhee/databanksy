@@ -53,10 +53,16 @@ module.exports.populate_artworks = (values) => {
     })
 }
 
-let get_artists_artworks = (id) => {
+module.exports.get_artists_artworks = (id) => {
     return new Promise((resolve, reject) => {
         sql.query(
-          `SELECT * FROM artworks WHERE creator_ID="${id}" LIMIT 20;`,
+          `SELECT a1.*, a2.*, a3.bio, a3.note, a3.role
+          FROM moma_artists a1
+          INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+          INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
+          WHERE a2.creator_ID="${id}"
+          LIMIT 20;
+          `,          
           function(err, res) {
             if (err) {
               reject(err);
@@ -124,6 +130,40 @@ module.exports.verify_artwork_exists = (artwork_id) => {
             };
 
             resolve(res && res.length > 0);
+          }
+        );
+    })
+}
+
+module.exports.search = (keyword, classification, startDate, endDate) => {
+  let classString = !!classification ? ` WHERE classification = "${classification}" AND ` : ' WHERE ';
+  let dateString = (!!startDate && !!endDate) ? 
+      `date REGEXP '^([0-9]{4})' AND date >= "${startDate}" AND date <= "${endDate}" AND ` : '';
+  let searchString = `(
+      a1.name LIKE '%${keyword}%'
+      OR a2.title LIKE '%${keyword}%'
+  )`;
+
+  let query1 = `
+    SELECT a1.*, a2.*, a3.bio, a3.note, a3.role
+    FROM moma_artists a1
+    INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+    INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID`;
+
+  let query2 = `
+    LIMIT 20;
+  `;
+
+  let query = query1 + classString + dateString + searchString + query2;
+
+  return new Promise((resolve, reject) => {
+        sql.query(query,
+          function(err, res) {
+            if (err) {
+              reject(err);
+            };
+
+            resolve(res);
           }
         );
     })

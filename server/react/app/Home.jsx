@@ -17,7 +17,8 @@ class Home extends Component {
     selectedArtwork: null,
     firstRender: true,
     saved: [],
-    user: null
+    user: null,
+    similar: false
   }
 
   componentDidMount() {
@@ -138,6 +139,14 @@ class Home extends Component {
     }
   }
 
+  setArtistOnly = () => {
+    this.setState({ similar: false })
+  }
+
+  setSimilar = () => {
+    this.setState({ similar: true })
+  }
+
   renderMain = () => {
     switch(this.state.currentScreen) {
       case 'Home':
@@ -151,11 +160,22 @@ class Home extends Component {
             name={this.state.name}
             saved={this.state.saved}
             saveArtwork={this.saveArtwork}
+            currentScreen={this.state.currentScreen}
+            similar={this.state.similar}
+            setArtistOnly={this.setArtistOnly}
+            setSimilar={this.setSimilar}
           />
         );
         break;
       case 'Search':
-        return <Search />
+        return (
+          <Search 
+            getArtworks={this.getArtworks}
+            selectArtwork={this.selectArtwork}
+            saved={this.state.saved}
+            saveArtwork={this.saveArtwork}
+          />
+        )
         break;
     }
   }

@@ -4,82 +4,6 @@ import styled from 'styled-components';
 
 import CategoryFilter from './CategoryFilter';
 
-
-const dummyResults = [
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude asdflkj asdfljk asdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflkj adflkj asdflkj adflkj asdflkj adflkj adflkj adflkj adfljk aflkj asdflkj asdflkj ',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Alice in Wasteland or is she in wasteland idk you tell me dude who knows asdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflkj ',
-    image: 'https://cdn.shopify.com/s/files/1/0439/8373/products/AliceInWasteland_web_store_file_6da1d3b1-11a0-4e5e-a3be-730ebe205055_1800x.progressive.jpg?v=1571449939',
-    creator: 'Angsty Guy who also has many angsty friends who are all angsty',
-    date: '8/8/2008',
-  },
-  {
-    title: 'Chapel Thingy',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1024px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg',
-    creator: 'Yincent Yan Yo',
-    date: '11/13/2032',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Alice in Wasteland or is she in wasteland idk you tell me dude who knows',
-    image: 'https://cdn.shopify.com/s/files/1/0439/8373/products/AliceInWasteland_web_store_file_6da1d3b1-11a0-4e5e-a3be-730ebe205055_1800x.progressive.jpg?v=1571449939',
-    creator: 'Angsty Guy who also has many angsty friends who are all angsty',
-    date: '8/8/2008',
-  },
-  {
-    title: 'Chapel Thingy',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1024px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg',
-    creator: 'Yincent Yan Yo',
-    date: '11/13/2032',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Alice in Wasteland or is she in wasteland idk you tell me dude who knows',
-    image: 'https://cdn.shopify.com/s/files/1/0439/8373/products/AliceInWasteland_web_store_file_6da1d3b1-11a0-4e5e-a3be-730ebe205055_1800x.progressive.jpg?v=1571449939',
-    creator: 'Angsty Guy who also has many angsty friends who are all angsty',
-    date: '8/8/2008',
-  },
-  {
-    title: 'Chapel Thingy',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1024px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg',
-    creator: 'Yincent Yan Yo',
-    date: '11/13/2032',
-  },
-  {
-    title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
-    creator: 'Japanese Dude',
-    date: '7/18/1999',
-  },
-  {
-    title: 'Alice in Wasteland or is she in wasteland idk you tell me dude who knows',
-    image: 'https://cdn.shopify.com/s/files/1/0439/8373/products/AliceInWasteland_web_store_file_6da1d3b1-11a0-4e5e-a3be-730ebe205055_1800x.progressive.jpg?v=1571449939',
-    creator: 'Angsty Guy who also has many angsty friends who are all angsty',
-    date: '8/8/2008',
-  },
-  {
-    title: 'Chapel Thingy',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1024px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg',
-    creator: 'Yincent Yan Yo',
-    date: '11/13/2032',
-  },
-];
-
 class Search extends Component {
   state = {
     searchText: '',
@@ -90,8 +14,21 @@ class Search extends Component {
     selectedTag: 'All',
   }
 
-  handleSearch = () => {
-    this.setState({ results: dummyResults });
+  handleSearch = () => {    
+    axios.get('/api/artworks/search', {
+      params: {
+        keyword: this.state.searchText,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+        classification: this.state.selectedTag === 'All' ? undefined : this.state.selectedTag
+      }
+    })
+    .then((res) => {
+      this.setState({ results: res.data });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
   handleChange = (event) => {
@@ -126,27 +63,37 @@ class Search extends Component {
     return (
       <div>
         {this.state.results.map((artwork, i) => {
+          let saved = this.props.saved.includes(artwork.artwork_ID);
+          let savedText = saved ? 'Saved!' : 'Save';
+
           return (
             <Result
               key={i}
               onMouseOver={() => this.handleMouseOver(i)}
               onMouseOut={this.handleMouseOut}
+              onClick={() => this.props.selectArtwork(artwork)}
             >
               <Bold>{artwork.title}</Bold>
-              <Artist>by {artwork.creator}</Artist>
+              <Artist>by {artwork.name}</Artist>
               <OptionWrapper show={i === this.state.hoverIndex}>
-                <OptionButton onClick={() => this.props.selectArtwork(artwork)}>
-                  <i className="material-icons">info</i>
-                  <Label>Info</Label>
-                </OptionButton>
-                <OptionButton onClick={() => this.setExhibit(artwork.creator)}>
-                  <i className="material-icons">brush</i>
-                  <Label>Exhibit</Label>
-                </OptionButton>
-                <OptionButton>
-                  <i className="material-icons">bookmark_border</i>
-                  <Label>Save</Label>
-                </OptionButton>
+                    <OptionButton onClick={() => this.props.selectArtwork(artwork)}>
+                      <i className="material-icons">info</i>
+                      <Label>Info</Label>
+                    </OptionButton>
+                    <OptionButton onClick={(e) => {
+                      e.stopPropagation();
+                      this.props.getArtworks('Home', artwork)}
+                    }>
+                      <i className="material-icons">brush</i>
+                      <Label>Exhibit</Label>
+                    </OptionButton>
+                    <OptionButton onClick={(e) => {
+                      e.stopPropagation();
+                      this.props.saveArtwork(artwork.artwork_ID)
+                    }}>
+                      <i className="material-icons">bookmark_border</i>
+                      <Label>{savedText}</Label>
+                    </OptionButton>
               </OptionWrapper>
             </Result>
           );

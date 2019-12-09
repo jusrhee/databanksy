@@ -63,6 +63,7 @@ let routes = (store) => {
     app.post('/api/user/artwork/remove', authorizer.verify_logged_in, userController.user_artwork_remove_post);
 
     app.get('/api/artworks', authorizer.verify_logged_in, artworkController.get_artworks);
+    app.get('/api/artworks/search', authorizer.verify_logged_in, artworkController.get_artworks_search);
     app.get('/api/artworks/associated', authorizer.verify_logged_in, artworkController.get_associated_artworks);
 
     app.get('/api/artist', authorizer.verify_logged_in, artistController.get_artist);
