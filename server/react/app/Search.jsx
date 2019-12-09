@@ -17,7 +17,7 @@ class Search extends Component {
   handleSearch = () => {    
     axios.get('/api/artworks/search', {
       params: {
-        keyword: this.state.searchText,
+        keyword: this.state.searchText.length === 0 ? ' ' : this.state.searchText,
         startDate: this.state.startDate,
         endDate: this.state.endDate,
         classification: this.state.selectedTag === 'All' ? undefined : this.state.selectedTag
@@ -54,7 +54,7 @@ class Search extends Component {
   }
 
   renderResults = () => {
-    if (!this.state.results || this.state.searchText === '') {
+    if (!this.state.results) {
       return <Placeholder>Press 'Enter' to search</Placeholder>
     }
     if (this.state.results.length === 0) {
@@ -125,6 +125,7 @@ class Search extends Component {
             placeholder='Start date'
             value={this.state.startDate}
             onChange={(e) => this.setState({ startDate: e.target.value })}
+            onKeyDown={this.handleKeyDown}
             maxLength='4'
           >
           </Date>
@@ -133,6 +134,7 @@ class Search extends Component {
             placeholder='End date'
             value={this.state.endDate}
             onChange={(e) => this.setState({ endDate: e.target.value })}
+            onKeyDown={this.handleKeyDown}
             maxLength='4'
           >
           </Date>
@@ -159,6 +161,9 @@ const Date = styled.input`
   border-bottom: 2px solid #787878;
   margin-right: 7px;
   font-size: 14px;
+  :focus{
+    outline: none;
+  }
 `;
 
 const FilterWrapper = styled.div`

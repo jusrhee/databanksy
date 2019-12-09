@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const options = [
-    'Architecture', 'Drawing', 'Sculpture', 'Installation', 'Painting', 'Print', 'Video', 'Photograph', 'Design', 'Illustrated Book', 'Multiple', 'Film', 'Periodical', 'Textile', 'Performance', '(not assigned)', 'Ephemera', 'Audio', 'Digital', 'Collage', 'Graphic Design', 'Media', 'Work on Paper', 'Poster', 'Architectural Model', 'Software'
+    'All', 'Architecture', 'Drawing', 'Sculpture', 'Installation', 'Painting', 'Print', 'Video', 'Photograph', 'Design', 'Illustrated Book', 'Multiple', 'Film', 'Periodical', 'Textile', 'Performance', '(not assigned)', 'Ephemera', 'Audio', 'Digital', 'Collage', 'Graphic Design', 'Media', 'Work on Paper', 'Poster', 'Architectural Model', 'Software'
 ];
 
 class CategoryFilter extends Component {

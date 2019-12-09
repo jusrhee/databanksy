@@ -137,12 +137,25 @@ module.exports.verify_artwork_exists = (artwork_id) => {
 
 module.exports.search = (keyword, classification, startDate, endDate) => {
   let classString = !!classification ? ` WHERE classification = "${classification}" AND ` : ' WHERE ';
-  let dateString = (!!startDate && !!endDate) ? 
-      `date REGEXP '^([0-9]{4})' AND date >= "${startDate}" AND date <= "${endDate}" AND ` : '';
-  let searchString = `(
-      a1.name LIKE '%${keyword}%'
-      OR a2.title LIKE '%${keyword}%'
-  )`;
+  let startDateMod = startDate || '0000';
+  let endDateMod = endDate || '9999';
+
+  let dateString = (!!startDate || !!endDate) ? 
+      `date REGEXP '^([0-9]{4})' AND date >= "${startDateMod}" AND date <= "${endDateMod}" ` : '';
+
+  let searchString = '';
+
+  for (let word of keyword.split(" ")) {
+    if (word.trim() !== '') {
+      searchString += `AND (a1.name LIKE '%${word}%'
+        OR a2.title LIKE '%${word}%')`;
+    }
+  }
+
+  searchString = (dateString.length === 0 && searchString.length > 4) ? searchString.substring(4, searchString.length)
+    : searchString;
+
+  classString = (!(!!startDate || !!endDate) && searchString === '') ? '' : classString;
 
   let query1 = `
     SELECT a1.*, a2.*, a3.bio, a3.note, a3.role
@@ -155,6 +168,8 @@ module.exports.search = (keyword, classification, startDate, endDate) => {
   `;
 
   let query = query1 + classString + dateString + searchString + query2;
+
+  console.log('QUERY IS', query);
 
   return new Promise((resolve, reject) => {
         sql.query(query,
