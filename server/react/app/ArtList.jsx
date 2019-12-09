@@ -12,7 +12,7 @@ class ArtList extends Component {
 
   componentDidUpdate(prevProps) {
     // Reset exhibit
-    if (this.props.currentScreen !== prevProps.currentScreen) {
+    if (this.props.name !== prevProps.name) {
       this.myRef.current.scrollTo(0, 0);
     }
   }
@@ -25,21 +25,51 @@ class ArtList extends Component {
     this.setState({ hoverIndex: -1 });
   }
 
+  renderToggle = () => {
+    if (this.props.name !== 'Databanksy.' && this.props.currentScreen !== 'Saved') {
+      return (
+        <Toggle>
+          <ToggleOption
+            selected={!this.props.similar}
+            onClick={this.props.setArtistOnly}
+          >
+            Artist Only
+          </ToggleOption>
+          <ToggleOption
+            selected={this.props.similar}
+            onClick={this.props.setSimilar}
+          >
+            View Similar
+          </ToggleOption>
+        </Toggle>
+      );
+    }
+  }
+
+
   render() {
+    let arr = this.props.artworks; 
+
+    if (arr.similar) {
+      arr = this.props.similar ? arr.similar : arr.artists;
+    }
+
     return (
-      <StyledArtList ref={this.myRef}>
+      <StyledArtList ref={this.myRef} fill={arr.length === 0}>
         <Greeting>
           <Name
             firstRender={this.props.firstRender}
             shrink={this.props.name !== 'Databanksy.'}
+            top={this.props.name !== 'Databanksy.' && this.props.currentScreen !== 'Saved'}
           >
             {this.props.name}
           </Name>
+          {this.renderToggle()}
           <Line 
             firstRender={this.props.firstRender} 
           />
         </Greeting>
-        {this.props.artworks.map((artwork, i) => {
+        {arr.map((artwork, i) => {
           let saved = this.props.saved.includes(artwork.artwork_ID);
           let savedText = saved ? 'Saved!' : 'Save';
 
@@ -63,7 +93,7 @@ class ArtList extends Component {
                       <i className="material-icons">info</i>
                       <Label>Info</Label>
                     </OptionButton>
-                    <OptionButton onClick={() => this.props.getArtworks(artwork)}>
+                    <OptionButton onClick={() => this.props.getArtworks('Home', artwork)}>
                       <i className="material-icons">brush</i>
                       <Label>Exhibit</Label>
                     </OptionButton>
@@ -126,7 +156,6 @@ const Bufferer = styled.div`
 
 const Greeting = styled.span`
   display: inline-block;
-  background: red;
   position: absolute;
   top: 0;
   left: 0;
@@ -190,7 +219,7 @@ const Name = styled.div`
   font-family: 'Source Serif Pro', serif;
   font-size: ${props => props.shrink ? '50px' : '80px'};
   position: absolute;
-  top: ${props => (props.shrink || props.firstRender) ? '35vh' : '30vh'};
+  top: ${props => props.top ? '26vh' : '30vh'};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -202,7 +231,7 @@ const Name = styled.div`
   animation-fill-mode: forwards;
   @keyframes float-greeting {
     from { top: 40vh; opacity: 0; }
-    to   { top: ${props => props.shrink ? '35vh' : '30vh'}; opacity: 1; }
+    to   { top: ${props => (props.shrink) ? '26vh' : '30vh'}; opacity: 1; }
   }
 `;
 
@@ -244,9 +273,33 @@ const StyledArtList = styled.div`
   padding-top: calc(50vh - 320px);
   padding-bottom: calc(50vh - 255px);
   padding-left: 600px;
+  height: ${props => props.fill ? '600px' : 'auto'};
   float: left;
   overflow-x: auto;
   white-space: nowrap;
   position: relative;
   display: inline-block;
+  overscroll-behavior-x: none;
 `;
+
+const Toggle = styled.div`
+  position: absolute;
+  top: 36vh;
+  width: 400px;
+  left: 20px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const ToggleOption = styled.div`
+  background: ${props => props.selected ? '#00000022' : ''};
+  padding: 15px;
+  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
+  font-family: Merriweather, serif;
+  margin-right: 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer
+`;
+

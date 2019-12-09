@@ -48,7 +48,7 @@ class Register extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const demo = urlParams.get('demo');
 
-    axios.post('http://localhost:3000/api/user/create', {
+    axios.post('/api/user/create', {
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
@@ -198,9 +198,12 @@ const Input = styled.input`
     :focus{
         outline: 0;
     }
-    :-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px white inset;
-        -webkit-text-fill-color: #ccc;
+    :-webkit-autofill,
+    :-webkit-autofill:hover,
+    :-webkit-autofill:focus,
+    :-webkit-autofill:active {
+      -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+      -webkit-transition-delay: 9999s;
     }
     ::placeholder {
         color: #ccc;
@@ -237,13 +240,13 @@ const SubmitButton = styled.button`
   text-align: left;
   border: 0;
   border-radius: 5px;
-  background: #839DFF;
+  background: #515569;
   margin-top: 21px;
   box-shadow: 0 2px 5px 0 #00000030;
   cursor: pointer;
   user-select: none;
   :focus { outline: 0 }
-  :hover { background: #6181f9 }
+  :hover { background: #343745 }
   > i {
     display: inline-block;
     float: right;
