@@ -86,18 +86,24 @@ class ArtList extends Component {
                 onMouseOver={() => this.handleMouseOver(i)}
                 onMouseOut={this.handleMouseOut}
               >
-                <Artwork key={i} src={artwork.image} />
-                <Overlay show={i === this.state.hoverIndex}>
+                <Artwork key={i} src={artwork.image}/>
+                <Overlay show={i === this.state.hoverIndex} onClick={() => this.props.selectArtwork(artwork)}>
                   <OptionWrapper>
                     <OptionButton onClick={() => this.props.selectArtwork(artwork)}>
                       <i className="material-icons">info</i>
                       <Label>Info</Label>
                     </OptionButton>
-                    <OptionButton onClick={() => this.props.getArtworks('Home', artwork)}>
-                      <i className="material-icons">brush</i>
-                      <Label>Exhibit</Label>
-                    </OptionButton>
-                    <OptionButton onClick={() => this.props.saveArtwork(artwork.artwork_ID)}>
+                      <OptionButton onClick={(e) => {
+                        e.stopPropagation();
+                        this.props.getArtworks('Home', artwork)}
+                      }>
+                        <i className="material-icons">brush</i>
+                        <Label>Exhibit</Label>
+                      </OptionButton>
+                      <OptionButton onClick={(e) => {
+                        e.stopPropagation();
+                        this.props.saveArtwork(artwork.artwork_ID)
+                      }}>
                       <i className="material-icons">bookmark_border</i>
                       <Label>{savedText}</Label>
                     </OptionButton>
@@ -251,6 +257,7 @@ const Overlay = styled.div`
   display: ${props => props.show ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const ArtPost = styled.div`
