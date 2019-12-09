@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import styled from 'styled-components';
-import gallery from './bg.jpeg';
+import gallery from './background.jpg';
 
 import ArtList from './ArtList';
 import ArtworkModal from './ArtworkModal'

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const dummyArtworks = [
   {
     title: 'Wave Thing',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/1920px-Great_Wave_off_Kanagawa2.jpg',
+    image: 'http://www.moma.org/media/W1siZiIsIjE0NzMyNyJdLFsicCIsImNvbnZlcnQiLCItcmVzaXplIDMwMHgzMDBcdTAwM2UiXV0.jpg?sha=a4bd00ef5cb1ac48',
     creator: 'Japanese Dude',
     date: '7/18/1999',
   },
