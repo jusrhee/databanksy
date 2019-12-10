@@ -14,6 +14,7 @@ const artistController = require('./controllers/artists');
 const userController = require('./controllers/user');
 
 let start = async () => {    
+    // apply all setup functions and middleware
     let store = await setup(app, {
         username: 'root',
         password: 'djkhaled',
@@ -54,11 +55,12 @@ let routes = (store) => {
         }
     });
 
-
+    // google oauth routes
     app.get('/auth/google/login', (req, res) => userController.user_google_cred_get(req, res, store));
 
     app.get('/auth/google/callback', (req, res) => userController.user_google_login_get(req, res, store));
 
+    // api routes 
     app.get('/api/user', authorizer.verify_logged_in, userController.user_get);
     app.get('/api/user/saved', authorizer.verify_logged_in, userController.user_artwork_saved_get);
     app.post('/api/user/login', (req, res) => userController.user_login_post(req, res, store));

@@ -69,6 +69,7 @@ let res = (app) => {
       try {
           let user = await UserService.getUserByGoogleId(profile.id);
 
+          // if the user does not exist, create the user
           if (!user) {
             user = await UserService.createUser({
               g_id: profile.id,

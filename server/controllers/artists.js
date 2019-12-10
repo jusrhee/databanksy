@@ -1,5 +1,8 @@
 const query = require('../sql/helpers.js');
 
+/**
+ * Retrieves the artist from the SQL database by ID
+ */
 module.exports.get_artist = async (req, res) => {
     if (!req.query.id) {
         res.status(400).send('id required');

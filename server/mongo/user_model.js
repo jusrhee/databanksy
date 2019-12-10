@@ -5,6 +5,7 @@ const SALT_WORK_FACTOR = 10;
 const numberRegex = /\d/;
 const letterRegex = /[a-zA-Z]/; 
 
+// validates a correct email
 let emailValidator = (v) => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -17,6 +18,7 @@ let emailValidator = (v) => {
     });
 }
 
+// define the schema
 let UserSchema = new Schema({
     g_id: String,
     displayName: String,
@@ -36,6 +38,7 @@ let UserSchema = new Schema({
     timeDeleted: Date
 });
 
+// add pre-save hook for password modification, allowing for hashing
 UserSchema.pre('save', function(next) {
     var user = this;
     if (user.isModified('password')) {
@@ -59,6 +62,7 @@ UserSchema.pre('save', function(next) {
     }
 });
 
+// checks if a password is the correct format
 let checkPassword = (pw) => {
     return new Promise((resolve, reject) => {
         if (pw.length < 8) {
@@ -69,6 +73,7 @@ let checkPassword = (pw) => {
     });
 }
 
+// compares passwords by hashing
 UserSchema.methods.comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
         if (err) return cb(err);

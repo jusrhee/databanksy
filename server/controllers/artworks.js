@@ -1,5 +1,8 @@
 const query = require('../sql/helpers.js');
 
+/**
+ * Retrieves a random set of artworks
+ */
 module.exports.get_artworks = async (req, res) => {
     try {
         let resp = await query.get_artworks();
@@ -11,6 +14,10 @@ module.exports.get_artworks = async (req, res) => {
     } 
 }
 
+/**
+ * Retrieves a random set of associated artworks, together with 
+ * a random set of the artist's artworks. 
+ */
 module.exports.get_associated_artworks = async (req, res) => {
     if (!req.query.id) {
         res.status(400).send('id required');
@@ -30,6 +37,10 @@ module.exports.get_associated_artworks = async (req, res) => {
     } 
 }
 
+/**
+ * Searches the artworks by keyword, and potentially by classification,
+ * startDate, and endDate.
+ */
 module.exports.get_artworks_search = async (req, res) => {
     if (!req.query.keyword) {
         res.status(400).send('keyword required');
@@ -46,6 +57,10 @@ module.exports.get_artworks_search = async (req, res) => {
     } 
 }
 
+/**
+ * Searches the artworks by keyword (and potentially classification,
+ * startDate, and endDate), and then finds associated artworks. 
+ */
 module.exports.get_artworks_search_associated = async (req, res) => {
     if (!req.query.keyword) {
         res.status(400).send('keyword required');

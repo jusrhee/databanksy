@@ -10,6 +10,10 @@ let sql = mysql.createConnection({
 
 sql.connect();
 
+/**
+ * Selects a random subset of 20 artworks where the artist who created 
+ * the artworks were recorded in both moma_artists and ulan_artists.
+ */
 module.exports.get_artworks = () => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -32,6 +36,10 @@ module.exports.get_artworks = () => {
     })
 }
 
+/**
+ * Finds the information in the target schema of the artworks 
+ * given a set of artwork IDs
+ */
 module.exports.populate_artworks = (values) => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -52,6 +60,9 @@ module.exports.populate_artworks = (values) => {
     })
 }
 
+/**
+ * Selects a random subset of artworks created by a particular artist.
+ */
 module.exports.get_artists_artworks = (id) => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -60,6 +71,7 @@ module.exports.get_artists_artworks = (id) => {
           INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
           INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
           WHERE a2.creator_ID="${id}"
+          ORDER BY RAND ()
           LIMIT 20;
           `,          
           function(err, res) {
@@ -73,35 +85,45 @@ module.exports.get_artists_artworks = (id) => {
     })
 }
 
+/**
+ * Selects a random subset of artworks where the artist who created 
+ * the artworks has been in some exhibition with a particular artist.
+ */
 module.exports.get_associated_artworks = (id) => {
     let artist_ID = `"${id}"`;
 
     return new Promise((resolve, reject) => {
         sql.query(
             `SELECT DISTINCT a2.*, a1.*, a3.bio, a3.note, a3.role
-            FROM exhibitions a4
-            INNER JOIN exhibitions a5 ON a5.exhibition_ID=a4.exhibition_ID AND a5.artist_ID<>${artist_ID}
-            INNER JOIN moma_artists a1 ON a1.ID=(
-              SELECT a.ID
-              FROM moma_artists a 
-              WHERE a.ID=a5.artist_ID
-              LIMIT 1
-            )
-            INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
-            INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
-            WHERE a4.artist_ID=${artist_ID}
-            LIMIT 500`,
+              FROM moma_artists a1
+                  INNER JOIN artworks a2 ON a2.creator_ID=a1.ID
+                  INNER JOIN ulan_artists a3 ON a3.ID=a1.ulan_ID
+              WHERE a1.ID IN (
+                  SELECT
+                      E2.artist_ID
+                  FROM
+                      exhibitions E1
+                      INNER JOIN exhibitions E2 ON (E2.exhibition_ID = E1.exhibition_ID)
+                  WHERE
+                      E1.artist_ID = ${artist_ID}
+                      AND E2.artist_ID <> ${artist_ID}
+                  )
+              ORDER BY RAND()
+              LIMIT 20;`,
           async function(err, res) {
             if (err) {
               reject(err);
             };
 
-            resolve(_.sample(res, 20));
+            resolve(res);
           }
         );
     })
 }
 
+/**
+ * Gets a particular artist from the database.
+ */
 module.exports.get_artist = (id) => {
     let artist_ID = `"${id}"`;
 
@@ -119,6 +141,9 @@ module.exports.get_artist = (id) => {
     })
 }
 
+/**
+ * Verifies that an artwork exists in the database. 
+ */
 module.exports.verify_artwork_exists = (artwork_id) => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -134,6 +159,9 @@ module.exports.verify_artwork_exists = (artwork_id) => {
     })
 }
 
+/**
+ * Selects a set of 20 artworks that match the search criteria.
+ */
 module.exports.search = (keyword, classification, startDate, endDate) => {
   let classString = !!classification ? ` WHERE classification = "${classification}" AND ` : ' WHERE ';
   let startDateMod = startDate || '0000';
@@ -181,6 +209,10 @@ module.exports.search = (keyword, classification, startDate, endDate) => {
     })
 }
 
+/**
+ * Selects a random subset of artworks where the artist who created 
+ * the artworks has been in some exhibition with a particular artist
+ */
 module.exports.search_associated = (keyword, classification, startDate, endDate) => {
   let classString = !!classification ? ` WHERE classification = "${classification}" AND ` : ' WHERE ';
   let startDateMod = startDate || '0000';

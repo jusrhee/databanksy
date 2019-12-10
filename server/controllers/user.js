@@ -2,6 +2,9 @@ const UserService = require('../mongo/user_functions');
 const passport = require('passport');
 const query = require('../sql/helpers.js');
 
+/**
+ * Retrieves the user information
+ */
 module.exports.user_get = async (req, res) => {
     try {
         res.status(200).json(req.user);
@@ -11,10 +14,14 @@ module.exports.user_get = async (req, res) => {
     }
 }
 
+/**
+ * Retrieves the saved artwork for a user
+ */
 module.exports.user_artwork_saved_get = async (req, res) => {
     try {
         let saved = (await UserService.getUserSaved(req.user._id)).reverse();
 
+        // if populate, join on the SQL data
         if (req.query.populate && saved.length > 0) {
             saved = (await query.populate_artworks(saved)).reverse();
         }
@@ -26,6 +33,9 @@ module.exports.user_artwork_saved_get = async (req, res) => {
     }
 }
 
+/**
+ * Logs the user into the platform, given a username and password.
+ */
 module.exports.user_login_post = async (req, res, store) => {
     if (!req.body.username) {
         return res.status(400).json({ code: 0, message: 'Username required' });
@@ -66,6 +76,10 @@ module.exports.user_login_post = async (req, res, store) => {
     }
 }
 
+/**
+ * Redirects the user to the Google login page, and then redirects a user 
+ * to our callback function.  
+ */
 module.exports.user_google_cred_get = async (req, res, store) => {
     try {
         passport.authenticate('google', {
@@ -77,6 +91,9 @@ module.exports.user_google_cred_get = async (req, res, store) => {
     }
 }
 
+/**
+ * Logs a user in using their Google credentials.  
+ */
 module.exports.user_google_login_get = async (req, res, store) => {
     try {
         passport.authenticate('google', (err, user, info) => {
@@ -105,6 +122,9 @@ module.exports.user_google_login_get = async (req, res, store) => {
     }
 }
 
+/**
+ * Creates a new user based on username, email, and password. 
+ */
 module.exports.user_create_post = async (req, res, store) => {
     if (!req.body.username) {
         return res.status(400).send('username required');
@@ -115,11 +135,13 @@ module.exports.user_create_post = async (req, res, store) => {
     } 
 
     try {
+        // check if the user exists in the database
         let exists = await UserService.doesUsernameExist(req.body.username);
 
         if (exists) {
             return res.status(400).json({code: 1, message: 'Username already taken'});
         } else {
+            // create the user if they do not exist
             let user = await UserService.createUser({
                 username: req.body.username,
                 email: req.body.email,
@@ -128,10 +150,7 @@ module.exports.user_create_post = async (req, res, store) => {
 
             passport.authenticate('local', (err, user, info) => {
                 req.login(user, (err) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send('Internal server error'); // should not occur
-                    }
+                    if (err) throw err;
 
                     // write the cookie manually
                     store.get(req.session.id, (err, session) => {
@@ -150,11 +169,29 @@ module.exports.user_create_post = async (req, res, store) => {
             })(req, res);
         }
     } catch (e) {
-        console.error(e);
-        res.status(500).send('Internal server error');
+        if (e.code === 2) {
+            res.status(400).json(e);
+        } else if (e.errors) {
+            if (e.errors.email) {
+                res.status(400).json({code: 0, message: 'Invalid email address'});
+            } else if (e.errors.username) {
+                res.status(400).json({code: 1, message: 'Maximum username length is 40 characters'});
+            } else if (e.errors.password) {
+                res.status(400).json({code: 2, message: 'Invalid password'});
+            } else {
+                console.error(e);
+                res.status(500).send('Internal server error');
+            }
+        } else {
+            console.error(e);
+            res.status(500).send('Internal server error');
+        }
     }
 }
 
+/**
+ * Logs the user out of the platform. 
+ */
 module.exports.user_logout_post = async (req, res) => {
     try {
         req.logout();
@@ -165,12 +202,16 @@ module.exports.user_logout_post = async (req, res) => {
     }
 }
 
+/**
+ * Adds an artwork to the set of saved artworks for a user. 
+ */
 module.exports.user_artwork_add_post = async (req, res) => {
     if (!req.body.artwork_id) {
         return res.status(400).send('artwork_id required');
     } 
 
     try {
+        // check if the artwork exists
         let artwork_exists = await query.verify_artwork_exists(req.body.artwork_id);
 
         if (artwork_exists) {
@@ -186,11 +227,15 @@ module.exports.user_artwork_add_post = async (req, res) => {
     }
 }
 
+/**
+ * Removes an artwork from the set of saved artworks for a user. 
+ */
 module.exports.user_artwork_remove_post = async (req, res) => {
     if (!req.body.artwork_id) {
         return res.status(400).send('artwork_id required');
     } 
 
+    // check if the artwork exists
     try {
         let artwork_exists = await query.verify_artwork_exists(req.body.artwork_id);
 
