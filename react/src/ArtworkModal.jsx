@@ -6,6 +6,8 @@ class ArtworkModal extends Component {
   state = {
     showTemp: true,
     wider: -1,
+    showNavLeft: true,
+    showNavRight: true,
   }
 
   componentDidMount() {
@@ -44,26 +46,46 @@ class ArtworkModal extends Component {
     return null;
   }
 
+  renderNavLeft = () => {
+    if (this.state.showNavLeft) {
+      return (
+        <NavLeft><i className="material-icons">arrow_back_ios</i></NavLeft>
+      )
+    }
+  }
+
+  renderNavRight = () => {
+    if (this.state.showNavRight) {
+      return (
+        <NavRight><i className="material-icons">arrow_forward_ios</i></NavRight>
+      )
+    }
+  }
+
   render() {
     const { selectedArtwork } = this.props;
     return (
       <StyledDetailedView>
-      <ArtworkContainer>
-        {this.renderArtwork()}
-      </ArtworkContainer>
-      <InfoPanel>
-        <ContentWrapper>
-          <Title>{selectedArtwork.title}</Title>
-          <Artist>By Guy Fieri</Artist>
-          <Date>Created: {selectedArtwork.date}</Date>
-          <Bio>Artist Information:<br /><br />BIO holds a trade meeting each year in the United States, which are essential for the business development and partnering activities that are required in the biotechnology sector, in which it is expensive to develop products, timelines to develop products are long, and regulatory risks are high.[6] In 2018 the BIO International Convention was held in Boston and was attended by 18,289 delegates from 49 states, the District of Columbia and Puerto Rico and 67 countries.[7] The event also held over 46,916 One-On-One Partnering Meetings, becoming a Guinness World Records, Record Holder for the "Largest Business Partnering Event."[8][9]</Bio>
-          <Tilde>~~~~~~~~~~~~~~~~</Tilde>
-        </ContentWrapper>
-      </InfoPanel>
-      <CloseButton onClick={() => this.props.selectArtwork(null)}>
-        <i className="material-icons">close</i>
-      </CloseButton>
-      {this.renderTemp()}
+        <NavWrapper>
+          {this.renderNavLeft()}
+          {this.renderNavRight()}
+        </NavWrapper>
+        <ArtworkContainer>
+          {this.renderArtwork()}
+        </ArtworkContainer>
+        <InfoPanel>
+          <ContentWrapper>
+            <Title>{selectedArtwork.title}</Title>
+            <Artist>By Guy Fieri</Artist>
+            <Date>Created: {selectedArtwork.date}</Date>
+            <Bio>Artist Information:<br /><br />BIO holds a trade meeting each year in the United States, which are essential for the business development and partnering activities that are required in the biotechnology sector, in which it is expensive to develop products, timelines to develop products are long, and regulatory risks are high.[6] In 2018 the BIO International Convention was held in Boston and was attended by 18,289 delegates from 49 states, the District of Columbia and Puerto Rico and 67 countries.[7] The event also held over 46,916 One-On-One Partnering Meetings, becoming a Guinness World Records, Record Holder for the "Largest Business Partnering Event."[8][9]</Bio>
+            <Tilde>~~~~~~~~~~~~~~~~</Tilde>
+          </ContentWrapper>
+        </InfoPanel>
+        <CloseButton onClick={() => this.props.selectArtwork(null)}>
+          <i className="material-icons">close</i>
+        </CloseButton>
+        {this.renderTemp()}
       </StyledDetailedView>
     );
   }
@@ -71,6 +93,63 @@ class ArtworkModal extends Component {
 
 export default ArtworkModal;
 
+const NavLeft = styled.div`
+  float: left;
+  height: 90px;
+  width: 45px;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  background: #ffffff22;
+  cursor: pointer;
+
+  > i {
+    color: white;
+    font-size: 20px;
+    margin-top: 35px;
+    margin-left: 10px;
+  }
+
+  opacity: 0;
+  animation: 'nav-left' 1s 0s;
+  animation-fill-mode: forwards;
+  @keyframes nav-left {
+    from { margin-left: -50px; opacity: 0; }
+    to   { margin-left: 10px; opacity: 1; }
+  }
+`;
+
+const NavRight = styled.div`
+  float: right;
+  height: 90px;
+  width: 45px;
+  border-top-left-radius: 80px;
+  border-bottom-left-radius: 80px;
+  background: #ffffff22;
+  cursor: pointer;
+
+  > i {
+    color: white;
+    font-size: 20px;
+    float: right;
+    margin-top: 35px;
+    margin-right: 10px;
+  }
+
+  opacity: 0;
+  animation: 'nav-right' 1s 0s;
+  animation-fill-mode: forwards;
+  @keyframes nav-right {
+    from { margin-right: -50px; opacity: 0; }
+    to   { margin-righ: 10px; opacity: 1; }
+  }
+`;
+
+const NavWrapper = styled.div`
+  position: absolute;
+  height: 90px;
+  width: 100%;
+  margin-top: calc(50vh - 55px);
+`;
 
 const ArtworkAlt = styled.img`
   height: 1000%;
