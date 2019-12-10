@@ -6,7 +6,7 @@ class Main extends Component {
   render() {
     return (
       <div className="Main">
-        <Home />
+        <Home currentScreen={this.props.currentScreen}/>
       </div>
     );
   }

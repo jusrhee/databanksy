@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import styled from 'styled-components';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import gallery from './background.jpg';
 
@@ -11,8 +12,8 @@ import Search from './Search';
 
 class Home extends Component {
   state = {
-    currentScreen: 'Home',
-    name: 'Databanksy.',
+    currentScreen: this.props.currentScreen,
+    name: this.props.currentScreen === 'Home' ? 'Databanksy.' : '',
     artworks: [],
     selectedArtwork: null,
     firstRender: true,
@@ -28,23 +29,32 @@ class Home extends Component {
         user: response.data
       });
 
-      this.getInitial();
+      this.getInitialSaved();
+
+      if (this.state.currentScreen === 'Saved') {
+        this.getArtworks(this.state.currentScreen, null, true, true);
+      } else if (this.state.currentScreen === 'Home') {
+        this.getArtworks(this.state.currentScreen, null, false, true);
+      }
+      
     })
   }
 
-  getInitial = () => {
-    axios.get('/api/artworks')
-    .then(response => {
-      this.setState({ 
-        artworks: response.data,
-        currentScreen: 'Home',
-        name: 'Databanksy.'
-      });
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentScreen !== this.props.currentScreen) {
+      this.setState({ currentScreen: this.props.currentScreen });
 
+      if (this.props.currentScreen === 'Saved') {
+        this.getArtworks(this.props.currentScreen, null, true, false);
+      } else if (this.props.currentScreen === 'Home') {
+        this.getArtworks(this.props.currentScreen, null, false, false);
+      } else if (this.props.currentScreen === 'Search') {
+        this.setCurrentScreen('Search')
+      }
+    }
+  }
+
+  getInitialSaved = () => {
     axios.get('/api/user/saved')
     .then(response => {
       this.setState({ 
@@ -56,14 +66,36 @@ class Home extends Component {
     })
   }
 
-  getArtworks = (screen, selectedArtwork, user) => {
+  getArtworks = (screen, selectedArtwork, user, firstRender) => {
     this.setState({
-      firstRender: false
+      firstRender
     });
 
     if (!selectedArtwork && !user) {
-      this.getInitial();
+      this.setState({ 
+          artworks: [],
+          currentScreen: 'Home',
+          name: 'Databanksy.'
+        });
+
+      axios.get('/api/artworks')
+      .then(response => {
+        this.setState({ 
+          artworks: response.data,
+          currentScreen: 'Home',
+          name: 'Databanksy.'
+        });
+      })
+      .catch(error => {
+        console.log(error)
+      })
     } else if (user) {
+      this.setState({ 
+        artworks: [],
+        name: this.state.user.username,
+        currentScreen: screen
+      });
+
       axios.get('/api/user/saved',{
         params: {
           populate: true
@@ -80,7 +112,7 @@ class Home extends Component {
 
           this.setState({ 
             artworks: result,
-            name: this.state.user.username,
+            name: this.state.user.displayName || this.state.user.username,
             currentScreen: screen
           });
       })
@@ -118,7 +150,7 @@ class Home extends Component {
         artwork_id: artwork_ID
       }).then((res) => {
 
-        saved.push(artwork_ID);
+        saved.unshift(artwork_ID);
 
         this.setState({ saved });
       })
@@ -220,18 +252,18 @@ class Home extends Component {
             {this.renderMain()}
           </Main>
           <NavBar>
-            <Button onClick={() => this.getArtworks('Home', null, false)}>
+            <StyledLink to='/app'>
               <i className="material-icons">home</i>
               <Label>Home</Label>
-            </Button>
-            <Button onClick={() => this.setCurrentScreen('Search')}>
+            </StyledLink>
+            <StyledLink to='/app/search'>
               <i className="material-icons">search</i>
               <Label>Search</Label>
-            </Button>
-            <Button onClick={() => this.getArtworks('Saved', null, true)}>
+            </StyledLink>
+            <StyledLink to='/app/saved'>
               <i className="material-icons">bookmark</i>
               <Label>Saved</Label>
-            </Button>
+            </StyledLink>
             <Button onClick={this.logout}>
               <i className="material-icons">exit_to_app</i>
               <Label>Log Out</Label>
@@ -249,10 +281,25 @@ class Home extends Component {
 
 export default Home;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  margin: 10px;
+  margin-top: 15px;
+  > i {
+    color: #ffffffdd;
+    font-size: 30px;
+  }
+`
+
 const ModalWrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: #000112de;
+  background: #000112ee;
   position: fixed;
   top: 0;
   left: 0;

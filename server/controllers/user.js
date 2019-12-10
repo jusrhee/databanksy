@@ -4,9 +4,7 @@ const query = require('../sql/helpers.js');
 
 module.exports.user_get = async (req, res) => {
     try {
-        let user = await UserService.getUser(req.user._id);
-
-        res.status(200).json(user);
+        res.status(200).json(req.user);
     } catch (e) {
         console.error(e);
         res.status(500).send('Internal server error');
@@ -15,10 +13,10 @@ module.exports.user_get = async (req, res) => {
 
 module.exports.user_artwork_saved_get = async (req, res) => {
     try {
-        let saved = await UserService.getUserSaved(req.user._id);
+        let saved = (await UserService.getUserSaved(req.user._id)).reverse();
 
         if (req.query.populate && saved.length > 0) {
-            saved = await query.populate_artworks(saved);
+            saved = (await query.populate_artworks(saved)).reverse();
         }
 
         res.status(200).json(saved);
@@ -62,6 +60,45 @@ module.exports.user_login_post = async (req, res, store) => {
                 res.status(200).send('Successful');
             });
         })(req, res);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Internal server error');
+    }
+}
+
+module.exports.user_google_cred_get = async (req, res, store) => {
+    try {
+        passport.authenticate('google', {
+            scope: ['profile', 'email']
+        })(req, res);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Internal server error');
+    }
+}
+
+module.exports.user_google_login_get = async (req, res, store) => {
+    try {
+        passport.authenticate('google', (err, user, info) => {
+            req.login(user, (err) => {
+                if (err) return res.status(400).json({ code: 1, message: 'Wrong password' });
+
+                // write the cookie manually
+                store.get(req.session.id, (err, session) => {
+                    if (err) console.error(err);
+
+                    if (session) {
+                        store.set(req.session.id, {
+                            cookie: session.cookie,
+                            passport: req.session.passport
+                        }, () => {
+                            res.redirect('/app');
+                        });
+                    }
+                });
+            });
+        })(req, res);
+
     } catch (e) {
         console.error(e);
         res.status(500).send('Internal server error');

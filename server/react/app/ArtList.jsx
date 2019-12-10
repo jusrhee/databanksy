@@ -54,13 +54,17 @@ class ArtList extends Component {
       arr = this.props.similar ? arr.similar : arr.artists;
     }
 
+    let screen = this.props.currentScreen;
+
+    let top = screen === 'Home' ? (this.props.name === 'Databanksy.' ? '31vh' : '27vh') : '34vh';
+
     return (
       <StyledArtList ref={this.myRef} fill={arr.length === 0}>
         <Greeting>
           <Name
             firstRender={this.props.firstRender}
             shrink={this.props.name !== 'Databanksy.'}
-            top={this.props.name !== 'Databanksy.' && this.props.currentScreen !== 'Saved'}
+            top={top}
           >
             {this.props.name}
           </Name>
@@ -225,7 +229,7 @@ const Name = styled.div`
   font-family: 'Source Serif Pro', serif;
   font-size: ${props => props.shrink ? '50px' : '80px'};
   position: absolute;
-  top: ${props => props.top ? '26vh' : '30vh'};
+  top: ${props => props.top};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -237,7 +241,7 @@ const Name = styled.div`
   animation-fill-mode: forwards;
   @keyframes float-greeting {
     from { top: 40vh; opacity: 0; }
-    to   { top: ${props => (props.shrink) ? '26vh' : '30vh'}; opacity: 1; }
+    to   { top: ${props => props.top}; opacity: 1; }
   }
 `;
 

@@ -54,9 +54,15 @@ let routes = (store) => {
         }
     });
 
+
+    app.get('/auth/google/login', (req, res) => userController.user_google_cred_get(req, res, store));
+
+    app.get('/auth/google/callback', (req, res) => userController.user_google_login_get(req, res, store));
+
     app.get('/api/user', authorizer.verify_logged_in, userController.user_get);
     app.get('/api/user/saved', authorizer.verify_logged_in, userController.user_artwork_saved_get);
     app.post('/api/user/login', (req, res) => userController.user_login_post(req, res, store));
+
     app.post('/api/user/create', (req, res) => userController.user_create_post(req, res, store));
     app.post('/api/user/logout', userController.user_logout_post);
     app.post('/api/user/artwork/add', authorizer.verify_logged_in, userController.user_artwork_add_post);

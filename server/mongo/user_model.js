@@ -18,13 +18,13 @@ let emailValidator = (v) => {
 }
 
 let UserSchema = new Schema({
+    g_id: String,
+    displayName: String,
     username: {
         type: String,
-        required: true,
         index: { unique: true },
-        maxlength: 20
+        maxlength: 40
     },
-    role: { type: String },
     email: {
         type: String,
         required: true,
@@ -63,14 +63,6 @@ let checkPassword = (pw) => {
     return new Promise((resolve, reject) => {
         if (pw.length < 8) {
             reject({code: 2, message: "Minimum must be at least 8 characters"});
-        }
-
-        if (!numberRegex.test(pw)) {
-            reject({code: 2, message: "Must contain a number"});
-        }
-
-        if (!letterRegex.test(pw)) {
-            reject({code: 2, message: "Must contain a letter"});
         }
 
         resolve();

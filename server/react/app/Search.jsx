@@ -191,7 +191,6 @@ const Artist = styled.div`
 `;
 
 const Label = styled.div`
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
   color: #00000099;
   font-family: 'Open Sans', sans-serif;
   font-size: 11px;
@@ -247,7 +246,6 @@ const Result = styled.div`
   margin-bottom: 30px;
   width: 100%;
   height: 50px;
-  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
   font-family: Merriweather, sans-serif;
   letter-spacing: 1px;
   white-space: nowrap;
@@ -268,7 +266,6 @@ const Placeholder = styled.div`
   text-align: center;
   margin-left: calc(50% - 250px);
   font-size: 16px;
-  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
   font-family: Merriweather, sans-serif;
   letter-spacing: 1;
   color: #787878;
@@ -338,7 +335,6 @@ const SearchInput = styled.input`
   border: 0;
   padding-left: 45px;
   width: calc(100% - 80px);
-  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
   font-family: Merriweather, serif;
   letter-spacing: 1px;
   border-bottom: 2px solid black;
