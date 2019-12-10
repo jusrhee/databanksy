@@ -146,8 +146,11 @@ class Home extends Component {
   }
 
   selectArtworkByIndex = (index) => {
+    let artwork = this.state.artworks.similar ? (this.state.similar ? 
+      this.state.artworks.similar[index] : this.state.artworks.artists[index]) : this.state.artworks[index];
+
     this.setState({ 
-      selectedArtwork: this.state.artworks[index], 
+      selectedArtwork: artwork, 
       selectedArtworkIndex: index 
     });
   }
@@ -264,11 +267,14 @@ class Home extends Component {
   }
 
   handleKeyDown = (e) => {
+    let arts = this.state.artworks.similar ? (this.state.similar ? this.state.artworks.similar
+      : this.state.artworks.artists) : this.state.artworks;
+    
     if (this.state.selectedArtwork) {
       if (e.keyCode === 37 && this.state.selectedArtworkIndex > 0) {
         this.selectArtworkByIndex(this.state.selectedArtworkIndex - 1);
       } else if (e.keyCode === 39 && this.state.selectedArtworkIndex < 
-        this.state.artworks.length) {
+        arts.length) {
         this.selectArtworkByIndex(this.state.selectedArtworkIndex + 1);
       }
     }
