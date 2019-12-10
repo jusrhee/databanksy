@@ -16,6 +16,7 @@ class Home extends Component {
     name: this.props.currentScreen === 'Home' ? 'Databanksy.' : '',
     artworks: [],
     selectedArtwork: null,
+    selectedArtworkIndex: -1,
     firstRender: true,
     saved: [],
     user: null,
@@ -23,6 +24,8 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown);
+
     axios.get('/api/user')
     .then(response => {
       this.setState({
@@ -138,8 +141,15 @@ class Home extends Component {
     }
   }
 
-  selectArtwork = (selectedArtwork) => {
-    this.setState({ selectedArtwork });
+  selectArtwork = (selectedArtwork, selectedArtworkIndex) => {
+    this.setState({ selectedArtwork, selectedArtworkIndex });
+  }
+
+  selectArtworkByIndex = (index) => {
+    this.setState({ 
+      selectedArtwork: this.state.artworks[index], 
+      selectedArtworkIndex: index 
+    });
   }
 
   saveArtwork = (artwork_ID) => {
@@ -218,7 +228,13 @@ class Home extends Component {
         <ModalWrapper>
           <ArtworkModal
             selectArtwork={this.selectArtwork}
+            selectArtworkByIndex={this.selectArtworkByIndex}
             selectedArtwork={this.state.selectedArtwork}
+            showNavLeft={(this.state.currentScreen !== 'Search') && 
+              this.state.selectedArtworkIndex !== 0}
+            showNavRight={(this.state.currentScreen !== 'Search') && 
+              this.state.selectedArtworkIndex !== this.state.artworks.length - 1}
+            index={this.state.selectedArtworkIndex}
           />
         </ModalWrapper>
       );
@@ -241,10 +257,27 @@ class Home extends Component {
     });
   }
 
+  handleHomeClick = () => {
+    if (this.state.currentScreen === 'Home') {
+      this.getArtworks('Home', false, null, false)
+    }
+  }
+
+  handleKeyDown = (e) => {
+    if (this.state.selectedArtwork) {
+      if (e.keyCode === 37 && this.state.selectedArtworkIndex > 0) {
+        this.selectArtworkByIndex(this.state.selectedArtworkIndex - 1);
+      } else if (e.keyCode === 39 && this.state.selectedArtworkIndex < 
+        this.state.artworks.length) {
+        this.selectArtworkByIndex(this.state.selectedArtworkIndex + 1);
+      }
+    }
+  }
+
   render() {
     if (this.state.user) {
       return (
-        <StyledHome>
+        <StyledHome onKeyDown={this.handleKeyDown}>
           <Bg src={gallery} />
           <TopBar>
           </TopBar>
@@ -252,7 +285,7 @@ class Home extends Component {
             {this.renderMain()}
           </Main>
           <NavBar>
-            <StyledLink to='/app'>
+            <StyledLink to='/app' onClick={this.handleHomeClick}>
               <i className="material-icons">home</i>
               <Label>Home</Label>
             </StyledLink>

@@ -12,11 +12,31 @@ class ArtworkModal extends Component {
     let { clientHeight, clientWidth } = this.refs.artwork;
   }
 
+  renderNavLeft = () => {
+    if (this.props.showNavLeft) {
+      return (
+        <NavLeft onClick={() => this.props.selectArtworkByIndex(this.props.index - 1)}>
+          <i className="material-icons">arrow_back_ios</i>
+        </NavLeft>
+      )
+    }
+  }
+
+  renderNavRight = () => {
+    if (this.props.showNavRight) {
+      return (
+        <NavRight onClick={() => this.props.selectArtworkByIndex(this.props.index + 1)}>
+          <i className="material-icons">arrow_forward_ios</i>
+        </NavRight>
+      )
+    }
+  }
+
   renderTemp = () => {
     if (this.state.showTemp) {
       return (
         <Temp>
-          <ArtworkAlt onMouseOver={() => {this.setState({ showTemp: false })}} ref='artwork' src={this.props.selectedArtwork.image} />
+          <ArtworkAlt onLoad={() => {this.setState({ showTemp: false })}} ref='artwork' src={this.props.selectedArtwork.image} />
         </Temp>
       )
     }
@@ -38,7 +58,6 @@ class ArtworkModal extends Component {
 
   renderArtwork = () => {
     if (this.state.wider >= 0) {
-      console.log(this.state.wider);
       return <Artwork src={this.props.selectedArtwork.image} wider={this.state.wider === 0} />
     }
     return null;
@@ -48,6 +67,10 @@ class ArtworkModal extends Component {
     const { selectedArtwork } = this.props;
     return (
       <StyledDetailedView>
+      <NavWrapper>
+          {this.renderNavLeft()}
+          {this.renderNavRight()}
+        </NavWrapper>
       <ArtworkContainer>
         {this.renderArtwork()}
       </ArtworkContainer>
@@ -83,6 +106,61 @@ const Temp = styled.div`
   height: 100vh;
 `;
 
+const NavLeft = styled.div`
+  float: left;
+  height: 90px;
+  width: 45px;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  background: #ffffff22;
+  cursor: pointer;
+  > i {
+    color: white;
+    font-size: 20px;
+    margin-top: 35px;
+    margin-left: 10px;
+  }
+  opacity: 0;
+  animation: 'nav-left' 1s 0s;
+  animation-fill-mode: forwards;
+  @keyframes nav-left {
+    from { margin-left: -50px; opacity: 0; }
+    to   { margin-left: 10px; opacity: 1; }
+  }
+`;
+
+const NavRight = styled.div`
+  float: right;
+  height: 90px;
+  width: 45px;
+  border-top-left-radius: 80px;
+  border-bottom-left-radius: 80px;
+  background: #ffffff22;
+  cursor: pointer;
+  > i {
+    color: white;
+    font-size: 20px;
+    float: right;
+    margin-top: 35px;
+    margin-right: 10px;
+  }
+  opacity: 0;
+  animation: 'nav-right' 1s 0s;
+  animation-fill-mode: forwards;
+  @keyframes nav-right {
+    from { margin-right: -50px; opacity: 0; }
+    to   { margin-righ: 10px; opacity: 1; }
+  }
+`;
+
+const NavWrapper = styled.div`
+  position: absolute;
+  height: 90px;
+  width: 100%;
+  margin-top: calc(50vh - 55px);
+`;
+
+
 const CloseButton = styled.div`
   position: absolute;
   width: 40px;
@@ -103,6 +181,7 @@ const StyledDetailedView = styled.div`
   display: flex;
   flex-direction: row;
   position: relative;
+  overscroll-behavior-x: none;
 `;
 
 const InfoPanel = styled.div`

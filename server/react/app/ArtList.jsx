@@ -91,9 +91,9 @@ class ArtList extends Component {
                 onMouseOut={this.handleMouseOut}
               >
                 <Artwork key={i} src={artwork.image}/>
-                <Overlay show={i === this.state.hoverIndex} onClick={() => this.props.selectArtwork(artwork)}>
+                <Overlay show={i === this.state.hoverIndex} onClick={() => this.props.selectArtwork(artwork, i)}>
                   <OptionWrapper>
-                    <OptionButton onClick={() => this.props.selectArtwork(artwork)}>
+                    <OptionButton onClick={() => this.props.selectArtwork(artwork, i)}>
                       <i className="material-icons">info</i>
                       <Label>Info</Label>
                     </OptionButton>
