@@ -87,6 +87,7 @@ class Search extends Component {
     startDate: '',
     endDate: '',
     selectedTag: 'All',
+    viewRelated: false,
   }
 
   handleSearch = () => {
@@ -188,6 +189,23 @@ class Search extends Component {
             maxLength='4'
           >
           </Date>
+          <SimilarToggle>
+            |
+            <Button
+              selected={!this.state.viewRelated}
+              onClick={() => this.setState({ viewRelated: false })}
+            >
+              Keyword Match
+            </Button>
+            /
+            <Button
+              selected={this.state.viewRelated}
+              onClick={() => this.setState({ viewRelated: true })}
+            >
+              View Related
+            </Button>
+            |
+          </SimilarToggle>
           <CategoryFilter
             selectTag={this.selectTag}
             selectedTag={this.state.selectedTag}
@@ -203,11 +221,32 @@ class Search extends Component {
 
 export default Search;
 
+const SimilarToggle = styled.div`
+  margin-top: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
+  font-family: Merriweather, sans-serif;
+  letter-spacing: 1px;
+  font-size: 13px;
+	color: #67677e;
+`;
+
+const Button = styled.span`
+  background: ${props => props.selected ? '#00000014' : ''};
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0px 5px;
+  user-select: none;
+  cursor: pointer;
+`;
+
 const Date = styled.input`
   width: 70px;
   background: transparent;
   text-align: center;
   border: 0;
+  margin-top: -5px;
   border-bottom: 2px solid #787878;
   margin-right: 7px;
   font-size: 14px;
