@@ -56,9 +56,7 @@ class ArtList extends Component {
 
     let screen = this.props.currentScreen;
 
-    let top = screen === 'Home' ? '31vh' : (
-      screen === 'Saved' ? '34vh' : '27vh'
-    );
+    let top = screen === 'Home' ? (this.props.name === 'Databanksy.' ? '31vh' : '27vh') : '34vh';
 
     return (
       <StyledArtList ref={this.myRef} fill={arr.length === 0}>

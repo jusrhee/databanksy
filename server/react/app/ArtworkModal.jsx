@@ -133,7 +133,7 @@ const ArtworkContainer = styled.div`
 const Date = styled.div`
   font-size: 16px;
   margin-top: 50px;
-  font-family: Helvetica, sans-serif;
+  font-family: Merriweather, sans-serif;
 `;
 
 const Tilde = styled(Date)`
@@ -150,20 +150,21 @@ const ContentWrapper = styled.div`
 const Title = styled.div`
   font-size: 30px;
   font-weight: bold;
-  font-family: Helvetica, sans-serif;
+  font-family: Merriweather, sans-serif;
 `;
 
 const Artist = styled.div`
   font-size: 20px;
   margin-top: 15px;
-  font-family: Helvetica, sans-serif;
+  font-family: Merriweather, sans-serif;
   line-spacing: 1.2em;
 `;
 
 const Bio = styled.div`
   font-size: 16px;
   margin-top: 30px;
-  font-family: Helvetica, sans-serif;
+  font-family: Merriweather, sans-serif;
+  line-height: 150%;
 `;
 
 const Artwork = styled.img`

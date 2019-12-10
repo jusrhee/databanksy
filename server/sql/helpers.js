@@ -168,8 +168,6 @@ module.exports.search = (keyword, classification, startDate, endDate) => {
 
   let query = query1 + classString + dateString + searchString + query2;
 
-  console.log('QUERY IS', query);
-
   return new Promise((resolve, reject) => {
         sql.query(query,
           function(err, res) {

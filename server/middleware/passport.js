@@ -16,7 +16,7 @@ let login = function(username, password) {
     return new Promise(async (resolve, reject) => {
         let user = await User.findOne({username: username});
 
-        if (!user.g_id) {
+        if (user) {
           user.comparePassword(password, (err, isMatch) => {
               if (err) reject(err);
 
@@ -72,10 +72,11 @@ let res = (app) => {
           if (!user) {
             user = await UserService.createUser({
               g_id: profile.id,
+              username: profile.id, 
               displayName: profile.displayName,
               email: profile._json.email,
               password: profile.id
-            })
+            });
           }
 
           return done(null, user);
