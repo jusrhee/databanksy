@@ -12,23 +12,42 @@ class Search extends Component {
     startDate: '',
     endDate: '',
     selectedTag: 'All',
+    viewRelated: false
   }
 
   handleSearch = () => {    
-    axios.get('/api/artworks/search', {
-      params: {
-        keyword: this.state.searchText.length === 0 ? ' ' : this.state.searchText,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-        classification: this.state.selectedTag === 'All' ? undefined : this.state.selectedTag
-      }
-    })
-    .then((res) => {
-      this.setState({ results: res.data });
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    if (this.state.viewRelated) {
+      axios.get('/api/artworks/search/associated', {
+        params: {
+          keyword: this.state.searchText.length === 0 ? ' ' : this.state.searchText,
+          startDate: this.state.startDate,
+          endDate: this.state.endDate,
+          classification: this.state.selectedTag === 'All' ? undefined : this.state.selectedTag
+        }
+      })
+      .then((res) => {
+        this.setState({ results: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    } else {
+      axios.get('/api/artworks/search', {
+        params: {
+          keyword: this.state.searchText.length === 0 ? ' ' : this.state.searchText,
+          startDate: this.state.startDate,
+          endDate: this.state.endDate,
+          classification: this.state.selectedTag === 'All' ? undefined : this.state.selectedTag
+        }
+      })
+      .then((res) => {
+        this.setState({ results: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+    
   }
 
   handleChange = (event) => {
@@ -138,6 +157,23 @@ class Search extends Component {
             maxLength='4'
           >
           </Date>
+          <SimilarToggle>
+            |
+            <Button
+              selected={!this.state.viewRelated}
+              onClick={() => this.setState({ viewRelated: false })}
+            >
+              Keyword Match
+            </Button>
+            /
+            <Button
+              selected={this.state.viewRelated}
+              onClick={() => this.setState({ viewRelated: true })}
+            >
+              View Related
+            </Button>
+            |
+          </SimilarToggle>
           <CategoryFilter
             selectTag={this.selectTag}
             selectedTag={this.state.selectedTag}
@@ -153,10 +189,31 @@ class Search extends Component {
 
 export default Search;
 
+const SimilarToggle = styled.div`
+  margin-top: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  @import url('https://fonts.googleapis.com/css?family=Merriweather:400,700&display=swap');
+  font-family: Merriweather, sans-serif;
+  letter-spacing: 1px;
+  font-size: 13px;
+  color: #67677e;
+`;
+
+const Button = styled.span`
+  background: ${props => props.selected ? '#00000014' : ''};
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0px 5px;
+  user-select: none;
+  cursor: pointer;
+`;
+
 const Date = styled.input`
   width: 70px;
   background: transparent;
   text-align: center;
+  margin-top: -5px; 
   border: 0;
   border-bottom: 2px solid #787878;
   margin-right: 7px;

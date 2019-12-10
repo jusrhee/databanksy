@@ -70,6 +70,7 @@ let routes = (store) => {
 
     app.get('/api/artworks', authorizer.verify_logged_in, artworkController.get_artworks);
     app.get('/api/artworks/search', authorizer.verify_logged_in, artworkController.get_artworks_search);
+    app.get('/api/artworks/search/associated', authorizer.verify_logged_in, artworkController.get_artworks_search_associated);
     app.get('/api/artworks/associated', authorizer.verify_logged_in, artworkController.get_associated_artworks);
 
     app.get('/api/artist', authorizer.verify_logged_in, artistController.get_artist);

@@ -45,3 +45,19 @@ module.exports.get_artworks_search = async (req, res) => {
         res.status(500).send('Internal server error');
     } 
 }
+
+module.exports.get_artworks_search_associated = async (req, res) => {
+    if (!req.query.keyword) {
+        res.status(400).send('keyword required');
+    }
+
+    try {
+        let results = await query.search_associated(req.query.keyword,
+            req.query.classification, req.query.startDate, req.query.endDate);
+
+        res.status(200).json(results);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Internal server error');
+    } 
+}
